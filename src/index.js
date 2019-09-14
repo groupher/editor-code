@@ -101,7 +101,7 @@ class Code {
    */
   render() {
     const container = this._make(
-      'code',
+      'pre',
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
       {
         contentEditable: true,

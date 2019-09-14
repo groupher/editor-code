@@ -137,6 +137,11 @@ class Code {
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
     console.log('inside saving .....')
+    if(Prism) {
+      console.log("Prism ...")
+      Prism.highlightAll()
+    }
+
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })

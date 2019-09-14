@@ -86,12 +86,10 @@ class Code {
       lang: data.lang || 'text',
     }
 
-    /*
     this.langInputEl = this._make('input', [this.CSS.langInput], {
       id: 'lang-input',
       value: this.data.lang,
     })
-    */
   }
 
   /**
@@ -101,21 +99,20 @@ class Code {
    */
   render() {
     const container = this._make(
-      'pre',
+      'code',
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
       {
         contentEditable: true,
       }
     )
-    // const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
+    const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
 
-    // const code = this._make('div', [this.CSS.input, this.CSS.text], {
-    //   innerHTML,
-    // })
+    const code = this._make('div', [this.CSS.input, this.CSS.text], {
+      innerHTML,
+    })
 
-    // container.appendChild(code)
+    container.appendChild(code)
 
-    /*
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
       const oldLangClass = 'language-' + this.data.lang
       const newLangClass = 'language-' + value
@@ -127,9 +124,6 @@ class Code {
       console.log(' TODO:  hilight prism')
       this.api.toolbar.close()
     })
-    */
-
-    // const container = this._make('blockquote', [this.CSS.baseClass]);
 
     return container
   }
@@ -151,14 +145,14 @@ class Code {
   /**
    * Sanitizer rules
    */
-  // static get sanitize() {
-    // return {
+  static get sanitize() {
+    return {
       /* text: { */
       /* br: false, */
       /* }, */
       /* alignment: {}, */
-    // }
-  // }
+    }
+  }
 
   /**
    * Create wrapper for Tool`s language selection:
@@ -167,13 +161,13 @@ class Code {
    *
    * @returns {HTMLDivElement}
    */
-  // renderSettings() {
-//    const wrapper = this._make('div', [this.CSS.settingsWrapper], {})
+  renderSettings() {
+    const wrapper = this._make('div', [this.CSS.settingsWrapper], {})
 
-    // wrapper.appendChild(this.langInputEl)
+    wrapper.appendChild(this.langInputEl)
 
- //   return wrapper
-//  }
+    return wrapper
+  }
 
   /**
    * Helper for making Elements with attributes

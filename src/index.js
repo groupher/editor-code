@@ -107,13 +107,13 @@ class Code {
         contentEditable: true,
       }
     )
-    const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
+    // const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
 
-    const code = this._make('div', [this.CSS.input, this.CSS.text], {
-      innerHTML,
-    })
+    // const code = this._make('div', [this.CSS.input, this.CSS.text], {
+    //   innerHTML,
+    // })
 
-    container.appendChild(code)
+    // container.appendChild(code)
 
     /*
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
@@ -140,7 +140,7 @@ class Code {
    */
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    console.log('inside saving .....')
+    console.log('inside saving ..')
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })
@@ -165,13 +165,13 @@ class Code {
    *
    * @returns {HTMLDivElement}
    */
-  renderSettings() {
-    const wrapper = this._make('div', [this.CSS.settingsWrapper], {})
+  // renderSettings() {
+//    const wrapper = this._make('div', [this.CSS.settingsWrapper], {})
 
     // wrapper.appendChild(this.langInputEl)
 
-    return wrapper
-  }
+ //   return wrapper
+//  }
 
   /**
    * Helper for making Elements with attributes

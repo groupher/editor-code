@@ -1,6 +1,6 @@
 {
   "name": "@groupher/editor-code",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "keywords": [
     "codex editor",
     "tool",
@@ -28,5 +28,8 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "scriptjs": "^2.5.9"
   }
 }

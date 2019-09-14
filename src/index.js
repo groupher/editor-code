@@ -2,6 +2,13 @@
  * Build styles
  */
 require('./index.css').toString()
+const $$ = require('scriptjs')
+
+$$("https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js")
+$$("https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js")
+// <script src="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js"></script>
+// <script src="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
+// <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/themes/prism-solarizedlight.css"></link>
 
 /**
  * @class Code
@@ -90,8 +97,18 @@ class Code {
       id: 'lang-input',
       value: this.data.lang,
     })
+    this.highlightCodeSyntax()
   }
 
+  highlightCodeSyntax() {
+    console.log('inside highlightCodeSyntax.....')
+    const isClientSide = typeof window !== 'undefined'
+
+    if(isClientSide && window.Prism) {
+      console.log("Prism highlightAll ...")
+      Prism.highlightAll()
+    }
+  }
   /**
    * Create Code Tool container with language input
    *
@@ -136,12 +153,7 @@ class Code {
    */
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    console.log('inside saving .....')
-    if(Prism) {
-      console.log("Prism ...")
-      Prism.highlightAll()
-    }
-
+    this.highlightCodeSyntax()
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })

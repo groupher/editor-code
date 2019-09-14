@@ -92,7 +92,7 @@ class Code {
       id: 'lang-input',
       value: this.data.lang,
     })
-    this.highlightCodeSyntax()
+    this.firstRendered = false
   }
 
   highlightCodeSyntax() {
@@ -125,6 +125,13 @@ class Code {
     })
 
     container.appendChild(code)
+
+    if(!this.firstRendered) {
+      console.log("do first render")
+      this.highlightCodeSyntax()
+    }
+
+    this.firstRendered = true
 
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
       const oldLangClass = 'language-' + this.data.lang

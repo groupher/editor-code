@@ -123,6 +123,7 @@ class Code {
     })
 
     container.appendChild(code)
+    this.highlightCodeSyntax(container)
 
     container.addEventListener('blur', () => {
       this.highlightCodeSyntax(container)

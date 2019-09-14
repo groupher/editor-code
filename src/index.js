@@ -100,13 +100,13 @@ class Code {
    * @returns {Element}
    */
   render() {
-    const container = this._make(
-      'code',
-      [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
-      {
-        contentEditable: true,
-      }
-    )
+    // const container = this._make(
+    //   'code',
+    //   [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
+    //   {
+    //     contentEditable: true,
+    //   }
+    // )
     // const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
 
     // const code = this._make('div', [this.CSS.input, this.CSS.text], {
@@ -129,6 +129,8 @@ class Code {
     })
     */
 
+    const container = this._make('blockquote', [this.CSS.baseClass]);
+
     return container
   }
 
@@ -140,7 +142,7 @@ class Code {
    */
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    console.log('inside saving ..')
+    console.log('inside saving .....')
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })
@@ -149,14 +151,14 @@ class Code {
   /**
    * Sanitizer rules
    */
-  static get sanitize() {
-    return {
+  // static get sanitize() {
+    // return {
       /* text: { */
       /* br: false, */
       /* }, */
       /* alignment: {}, */
-    }
-  }
+    // }
+  // }
 
   /**
    * Create wrapper for Tool`s language selection:

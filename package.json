@@ -1,6 +1,6 @@
 {
   "name": "@groupher/editor-code",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "keywords": [
     "codex editor",
     "tool",
@@ -30,6 +30,7 @@
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
+    "mastani-codehighlight": "0.0.7",
     "scriptjs": "^2.5.9"
   }
 }

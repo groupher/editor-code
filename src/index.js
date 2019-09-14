@@ -230,7 +230,7 @@ class Code {
     return el;
   }
 }
-module.exports = Quote;
+module.exports = Code;
 
 
 

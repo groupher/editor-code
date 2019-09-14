@@ -3,7 +3,7 @@
  */
 require('./index.css').toString()
 
-const Prism = require('prismjs');
+const Prism = require('prismjs')
 
 /**
  * @class Code
@@ -92,18 +92,16 @@ class Code {
       id: 'lang-input',
       value: this.data.lang,
     })
-    this.firstRendered = false
   }
 
-  highlightCodeSyntax() {
+  highlightCodeSyntax(element) {
     console.log('inside highlightCodeSyntax.....')
-    Prism.highlightAll()
-    // const isClientSide = typeof window !== 'undefined'
 
-    // if(isClientSide && window.Prism) {
-    //   console.log("Prism highlightAll .. .")
-    //   Prism.highlightAll()
-    // }
+    // see: https://github.com/PrismJS/prism/issues/832#issuecomment-300175499
+    Prism.hooks.add('before-highlight', env => {
+      env.code = env.element.innerText
+    })
+    Prism.highlightElement(element)
   }
   /**
    * Create Code Tool container with language input
@@ -126,12 +124,9 @@ class Code {
 
     container.appendChild(code)
 
-    if(!this.firstRendered) {
-      console.log("do first render")
-      this.highlightCodeSyntax()
-    }
-
-    this.firstRendered = true
+    container.addEventListener('blur', () => {
+      this.highlightCodeSyntax(container)
+    })
 
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
       const oldLangClass = 'language-' + this.data.lang
@@ -141,7 +136,8 @@ class Code {
       container.classList.add(newLangClass)
 
       this.data = { lang: value }
-      console.log(' TODO:  hilight prism')
+
+      this.highlightCodeSyntax(container)
       this.api.toolbar.close()
     })
 
@@ -156,7 +152,7 @@ class Code {
    */
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    this.highlightCodeSyntax()
+    // this.highlightCodeSyntax()
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })

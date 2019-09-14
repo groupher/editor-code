@@ -100,13 +100,13 @@ class Code {
    * @returns {Element}
    */
   render() {
-    // const container = this._make(
-    //   'code',
-    //   [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
-    //   {
-    //     contentEditable: true,
-    //   }
-    // )
+    const container = this._make(
+      'code',
+      [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
+      {
+        contentEditable: true,
+      }
+    )
     // const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
 
     // const code = this._make('div', [this.CSS.input, this.CSS.text], {
@@ -129,7 +129,7 @@ class Code {
     })
     */
 
-    const container = this._make('blockquote', [this.CSS.baseClass]);
+    // const container = this._make('blockquote', [this.CSS.baseClass]);
 
     return container
   }

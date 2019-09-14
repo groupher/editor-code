@@ -3,7 +3,7 @@
  */
 require('./index.css').toString()
 
-import Prism from 'mastani-codehighlight'
+import Prism from 'prismjs';
 // const $$ = require('scriptjs')
 
 // $$("https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js")

@@ -86,10 +86,12 @@ class Code {
       lang: data.lang || 'text',
     }
 
+    /*
     this.langInputEl = this._make('input', [this.CSS.langInput], {
       id: 'lang-input',
       value: this.data.lang,
     })
+    */
   }
 
   /**
@@ -113,6 +115,7 @@ class Code {
 
     container.appendChild(code)
 
+    /*
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
       const oldLangClass = 'language-' + this.data.lang
       const newLangClass = 'language-' + value
@@ -124,6 +127,7 @@ class Code {
       console.log(' TODO:  hilight prism')
       this.api.toolbar.close()
     })
+    */
 
     return container
   }
@@ -136,7 +140,7 @@ class Code {
    */
   save(codeElement) {
     // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    console.log('inside saving ..')
+    console.log('inside saving .....')
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })
@@ -164,7 +168,7 @@ class Code {
   renderSettings() {
     const wrapper = this._make('div', [this.CSS.settingsWrapper], {})
 
-    wrapper.appendChild(this.langInputEl)
+    // wrapper.appendChild(this.langInputEl)
 
     return wrapper
   }

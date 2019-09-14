@@ -3,14 +3,7 @@
  */
 require('./index.css').toString()
 
-import Prism from 'prismjs';
-// const $$ = require('scriptjs')
-
-// $$("https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js")
-// $$("https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js")
-// <script src="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js"></script>
-// <script src="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js"></script>
-// <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.17.1/themes/prism-solarizedlight.css"></link>
+const Prism = require('prismjs');
 
 /**
  * @class Code
@@ -104,12 +97,13 @@ class Code {
 
   highlightCodeSyntax() {
     console.log('inside highlightCodeSyntax.....')
-    const isClientSide = typeof window !== 'undefined'
+    Prism.highlightAll()
+    // const isClientSide = typeof window !== 'undefined'
 
-    if(isClientSide && window.Prism) {
-      console.log("Prism highlightAll .. .")
-      Prism.highlightAll()
-    }
+    // if(isClientSide && window.Prism) {
+    //   console.log("Prism highlightAll .. .")
+    //   Prism.highlightAll()
+    // }
   }
   /**
    * Create Code Tool container with language input

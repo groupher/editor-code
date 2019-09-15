@@ -61,14 +61,14 @@ class Code {
   get CSS() {
     return {
       baseClass: this.api.styles.block,
+      codeWrapper: 'cdx-code-wrapper',
       wrapper: 'cdx-code',
       text: 'cdx-code__text',
       langClass: 'language-' + this.data.lang,
       input: 'cdx-code__input', // this.api.styles.input,
       langInput: 'cdx-code-lang_input',
       settingsWrapper: 'cdx-code-settings',
-      settingsButton: this.api.styles.settingsButton,
-      settingsButtonActive: this.api.styles.settingsButtonActive,
+      settingsButton: 'ce-toolbar__settings-btn',
     }
   }
 
@@ -90,7 +90,7 @@ class Code {
 
     this.langInputEl = this._make('input', [this.CSS.langInput], {
       id: 'lang-input',
-      value: this.data.lang,
+      value: this.data.lang.toLowerCase(),
     })
   }
 
@@ -109,6 +109,7 @@ class Code {
    * @returns {Element}
    */
   render() {
+    const Wrapper = this._make('div', [this.CSS.codeWrapper], {})
     const container = this._make(
       'code',
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
@@ -116,14 +117,28 @@ class Code {
         contentEditable: true,
       }
     )
-    const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
+    const langLabel = this._make('div', ['cdx-code-lang_label'], {
+      innerHTML: this.data.lang,
+    })
 
+    const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
     const code = this._make('div', [this.CSS.input, this.CSS.text], {
       innerHTML,
     })
 
+    Wrapper.appendChild(container)
+    Wrapper.appendChild(langLabel)
     container.appendChild(code)
+
     this.highlightCodeSyntax(container)
+
+    // open lang settings
+    langLabel.addEventListener('click', () => {
+      // NOTE:  this setTimeout is must
+      setTimeout(() => {
+        document.querySelector('.' + this.CSS.settingsButton).click()
+      }, 100)
+    })
 
     container.addEventListener('blur', () => {
       this.highlightCodeSyntax(container)
@@ -136,13 +151,14 @@ class Code {
       container.classList.remove(oldLangClass)
       container.classList.add(newLangClass)
 
-      this.data = { lang: value }
+      this.data = { lang: value.toLowerCase() }
 
       this.highlightCodeSyntax(container)
       this.api.toolbar.close()
+      langLabel.innerText = this.data.lang
     })
 
-    return container
+    return Wrapper
   }
 
   /**
@@ -152,8 +168,6 @@ class Code {
    * @returns {CodeData}
    */
   save(codeElement) {
-    // console.log('stringify version: ', JSON.stringify(codeElement.innerText));
-    // this.highlightCodeSyntax()
     return Object.assign(this.data, {
       text: codeElement.innerText,
     })

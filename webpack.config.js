@@ -15,6 +15,10 @@ module.exports = {
         ]
       },
       {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader?removeSVGTagAttrs=false'
+      },
+      {
         test: /\.css$/,
         use: [
           'style-loader',
@@ -28,6 +32,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js',
     library: 'Code',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   }
 };

@@ -1,6 +1,6 @@
 {
   "name": "@groupher/editor-code",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "keywords": [
     "codex editor",
     "tool",
@@ -26,10 +26,12 @@
     "babel-loader": "^8.0.5",
     "css-loader": "^1.0.0",
     "style-loader": "^0.21.0",
+    "svg-inline-loader": "^0.8.0",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.2.0",
     "prismjs": "^1.17.1"
   }
 }

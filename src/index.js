@@ -1,10 +1,12 @@
 /**
  * Build styles
  */
-require('./index.css').toString()
+import './index.css';
 
-const Prism = require('prismjs')
+import Prism from 'prismjs'
+import copyToClipboard from 'copy-to-clipboard';
 
+import CopyIcon from './copy.svg'
 /**
  * @class Code
  * @classdesc Code Tool for Editor.js
@@ -20,7 +22,7 @@ const Prism = require('prismjs')
  * @description Code Tool`s initial configuration
  * @property {'center'|'left'} defaultAlignment - alignment to use as default
  */
-class Code {
+export default class Code {
   /**
    * Get Tool toolbox settings
    * icon - Tool icon's SVG
@@ -65,6 +67,10 @@ class Code {
       wrapper: 'cdx-code',
       text: 'cdx-code__text',
       langClass: 'language-' + this.data.lang,
+      langLabel: 'cdx-code-lang_label',
+      copyLabel: 'cdx-code-lang_copy',
+      copySuccess: 'cdx-code-lang_copy-success',
+      cornerWrapper: 'cdx-code-lang_corner_warpper',
       input: 'cdx-code__input', // this.api.styles.input,
       langInput: 'cdx-code-lang_input',
       settingsWrapper: 'cdx-code-settings',
@@ -111,6 +117,8 @@ class Code {
    */
   render() {
     const Wrapper = this._make('div', [this.CSS.codeWrapper], {})
+    const codeText = this.data.text
+
     const container = this._make(
       'code',
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
@@ -118,17 +126,26 @@ class Code {
         contentEditable: true,
       }
     )
-    const langLabel = this._make('div', ['cdx-code-lang_label'], {
+
+    const cornerWrapper = this._make('div', [this.CSS.cornerWrapper])
+
+    const langLabel = this._make('div', [this.CSS.langLabel], {
       innerHTML: this.data.lang,
     })
 
-    const innerHTML = this.data.text.replace(/ /g, '&nbsp;')
-    const code = this._make('div', [this.CSS.input, this.CSS.text], {
-      innerHTML,
+    const copyLabel = this._make('div', [this.CSS.copyLabel], {
+      innerHTML: CopyIcon
     })
 
+    const code = this._make('div', [this.CSS.input, this.CSS.text], {
+      innerHTML: codeText,
+    })
+
+    cornerWrapper.appendChild(langLabel)
+    cornerWrapper.appendChild(copyLabel)
+
     Wrapper.appendChild(container)
-    Wrapper.appendChild(langLabel)
+    Wrapper.appendChild(cornerWrapper)
     container.appendChild(code)
 
     this.highlightCodeSyntax(container)
@@ -139,6 +156,17 @@ class Code {
       setTimeout(() => {
         document.querySelector('.' + this.CSS.settingsButton).click()
       }, 100)
+    })
+
+    copyLabel.addEventListener('click', () => {
+      copyLabel.innerHTML = '✔ 已复制'
+      copyLabel.classList.add(this.CSS.copySuccess)
+      copyToClipboard(codeText)
+
+      setTimeout(() => {
+        copyLabel.classList.remove(this.CSS.copySuccess)
+        copyLabel.innerHTML = CopyIcon
+      }, 2000)
     })
 
     container.addEventListener('blur', () => {
@@ -225,4 +253,3 @@ class Code {
     return el
   }
 }
-module.exports = Code

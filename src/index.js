@@ -169,9 +169,12 @@ export default class Code {
       }, 2000)
     })
 
-    container.addEventListener('blur', () => {
+    // NOTE: 
+    // 这里不能用监听 input change 的方法去调用高亮函数，因为
+    // 如果这样高亮的话光标会自动到这个 block 的初始位置
+    container.addEventListener('blur', () => 
       this.highlightCodeSyntax(container)
-    })
+    )
 
     this.langInputEl.addEventListener('blur', ({ target: { value } }) => {
       const oldLangClass = 'language-' + this.data.lang

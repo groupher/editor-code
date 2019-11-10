@@ -9,13 +9,11 @@
 .cdx-code {
   margin: 0;
   background: transparent;
-  box-shadow: 0 1px 15px 0px rgba(10, 10, 10, 0.06);
-  border: 1px solid #efefef;
   display: block;
   outline: none;
   font-size: 16px !important;
   padding: 10px 12px !important;
-  min-height: 50px;
+  min-height: 42px;
   margin-bottom: 20px;
 }
 

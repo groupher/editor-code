@@ -10,7 +10,10 @@ import copyToClipboard from "copy-to-clipboard";
 
 import { getLangOptions, initSelector } from './lang_selector'
 
-import CopyIcon from "./copy.svg";
+import CopyIcon from "./icon/copy.svg";
+import TabIcon from './icon/tab.svg'
+import LinenoIcon from './icon/lineno.svg'
+
 /**
  * @class Code
  * @classdesc Code Tool for Editor.js
@@ -78,8 +81,10 @@ export default class Code {
       cornerWrapper: "cdx-code-lang_corner_warpper",
       input: "cdx-code__input", // this.api.styles.input,
       langInput: "cdx-code-lang_input",
-      settingsWrapper: "cdx-code-settings",
-      // settingsButton: "ce-toolbar__settings-btn"
+
+      // settings
+      customSettingWrapper: 'cdx-custom-setting-wrapper',
+      settingsButton: 'cdx-settings-button',
     };
   }
 
@@ -101,6 +106,19 @@ export default class Code {
       text: data.text || "",
       lang: data.lang || "text"
     };
+
+    this.settings = [
+      {
+        title: '增加标签页',
+        icon: TabIcon,
+        type: 'warning',
+      },
+      {
+        title: '显示行号',
+        icon: LinenoIcon,
+        type: 'error',
+      },
+    ]
 
     this.langInputEl = this._make("input", [this.CSS.langInput], {
       id: "lang-input",
@@ -134,7 +152,7 @@ export default class Code {
       innerHTML: `<div class="tabs">
       <input type="radio" id="tab1" name="tab-control" checked>
       <input type="radio" id="tab2" name="tab-control">
-      <input type="radio" id="tab3" name="tab-control">  
+      <input type="radio" id="tab3" name="tab-control">
       <input type="radio" id="tab4" name="tab-control">
       <ul>
         <li title="Features">
@@ -171,9 +189,9 @@ export default class Code {
           </label>
         </li>
       </ul>
-      
+
       <div class="slider"><div class="indicator"></div></div>
-    
+
     </div>
     `
     })
@@ -311,11 +329,25 @@ export default class Code {
    * @returns {HTMLDivElement}
    */
   renderSettings() {
-    const wrapper = this._make("div", [this.CSS.settingsWrapper], {});
+    const Wrapper = this._make('DIV', [this.CSS.customSettingWrapper], {})
 
-    wrapper.appendChild(this.langInputEl);
+    this.settings.forEach((item) => {
+      const itemEl = this._make('div', [this.CSS.settingsButton], {
+        title: item.title,
+        innerHTML: item.icon
+      });
 
-    return wrapper;
+      /* if (this.data.type === item.type) this.highlightSettingIcon(itemEl) */
+      /*  */
+      /* itemEl.addEventListener('click', () => { */
+        /* this.setAlertType(item.type); */
+        /* this.highlightSettingIcon(itemEl) */
+      /* }); */
+
+      Wrapper.appendChild(itemEl);
+    });
+
+    return Wrapper
   }
 
   /**

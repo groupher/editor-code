@@ -3,6 +3,7 @@
  */
 import "./index.css";
 import "./lang_selector.css";
+import "./tabber.css";
 
 import Prism from "prismjs";
 import copyToClipboard from "copy-to-clipboard";
@@ -67,6 +68,7 @@ export default class Code {
     return {
       baseClass: this.api.styles.block,
       codeWrapper: "cdx-code-wrapper",
+      contentWrapper: 'cdx-code-content-wrapper',
       wrapper: "cdx-code",
       text: "cdx-code__text",
       langClass: "language-" + this.data.lang,
@@ -77,7 +79,7 @@ export default class Code {
       input: "cdx-code__input", // this.api.styles.input,
       langInput: "cdx-code-lang_input",
       settingsWrapper: "cdx-code-settings",
-      settingsButton: "ce-toolbar__settings-btn"
+      // settingsButton: "ce-toolbar__settings-btn"
     };
   }
 
@@ -123,7 +125,58 @@ export default class Code {
    */
   render() {
     this.element = this._make("div", [this.CSS.codeWrapper], {});
+    this.contentWrapper = this._make("div", [this.CSS.contentWrapper], {});
+
     const codeText = this.data.text;
+
+    const ICON_ASSETS = 'https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/'
+    const tabber = this._make('div', ['tabs-wrapper'], {
+      innerHTML: `<div class="tabs">
+      <input type="radio" id="tab1" name="tab-control" checked>
+      <input type="radio" id="tab2" name="tab-control">
+      <input type="radio" id="tab3" name="tab-control">  
+      <input type="radio" id="tab4" name="tab-control">
+      <ul>
+        <li title="Features">
+          <label for="tab1" role="button">
+            <div class="lang">
+              <img src=${ICON_ASSETS + 'javascript.png'} />
+              <div>javascript</div>
+            </div>
+          </label>
+        </li>
+        <li title="Delivery Contents">
+          <label for="tab2" role="button">
+            <div class="lang">
+              <img src=${ICON_ASSETS + 'elixir.png'} />
+              <div>Elixir</div>
+            </div>
+          </label>
+        </li>
+        <li title="Delivery Contents">
+          <label for="tab3" role="button">
+            <div class="lang">
+              <img src=${ICON_ASSETS + 'ruby.png'} />
+              <div>ruby</div>
+            </div>
+          </label>
+        </li>
+
+        <li title="Delivery Contents">
+          <label for="tab4" role="button">
+            <div class="lang">
+              <img src=${ICON_ASSETS + 'java.png'} />
+              <div>java</div>
+            </div>
+          </label>
+        </li>
+      </ul>
+      
+      <div class="slider"><div class="indicator"></div></div>
+    
+    </div>
+    `
+    })
 
     const container = this._make(
       "code",
@@ -174,19 +227,25 @@ export default class Code {
     cornerWrapper.appendChild(langLabel);
     cornerWrapper.appendChild(copyLabel);
 
-    this.element.appendChild(container);
-    this.element.appendChild(cornerWrapper);
+    this.element.appendChild(tabber)
     container.appendChild(code);
+
+    this.contentWrapper.appendChild(container);
+    this.contentWrapper.appendChild(cornerWrapper);
+
+    // this.element.appendChild(container);
+    // this.element.appendChild(cornerWrapper);
+    this.element.appendChild(this.contentWrapper);
 
     this.highlightCodeSyntax(container);
 
     // open lang settings
-    langLabel.addEventListener("click2", () => {
-      // NOTE:  this setTimeout is must
-      setTimeout(() => {
-        document.querySelector("." + this.CSS.settingsButton).click();
-      }, 100);
-    });
+    // langLabel.addEventListener("click2", () => {
+    // NOTE:  this setTimeout is must
+    //   setTimeout(() => {
+    //     document.querySelector("." + this.CSS.settingsButton).click();
+    //   }, 100);
+    // });
 
     copyLabel.addEventListener("click", () => {
       copyLabel.innerHTML = "✔ 已复制";

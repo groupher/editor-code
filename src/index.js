@@ -148,51 +148,61 @@ export default class Code {
     const codeText = this.data.text;
 
     const ICON_ASSETS = 'https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/'
-    const tabber = this._make('div', ['tabs-wrapper'], {
-      innerHTML: `<div class="tabs">
-      <input type="radio" id="tab1" name="tab-control" checked>
-      <input type="radio" id="tab2" name="tab-control">
-      <input type="radio" id="tab3" name="tab-control">
-      <input type="radio" id="tab4" name="tab-control">
-      <ul>
-        <li title="Features">
-          <label for="tab1" role="button">
-            <div class="lang">
-              <img src=${ICON_ASSETS + 'javascript.png'} />
-              <div>javascript</div>
-            </div>
-          </label>
-        </li>
-        <li title="Delivery Contents">
-          <label for="tab2" role="button">
-            <div class="lang">
-              <img src=${ICON_ASSETS + 'elixir.png'} />
-              <div>Elixir</div>
-            </div>
-          </label>
-        </li>
-        <li title="Delivery Contents">
-          <label for="tab3" role="button">
-            <div class="lang">
-              <img src=${ICON_ASSETS + 'ruby.png'} />
-              <div>ruby</div>
-            </div>
-          </label>
-        </li>
+    const tabber = this._make('div', ['cdx-code-tabs-wrapper'], {
+      innerHTML: `
+      <div class="cdx-code-tabs">
+        <input type="radio" id="tab1" name="tab-control" checked>
+        <input type="radio" id="tab2" name="tab-control">
+        <input type="radio" id="tab3" name="tab-control">
+        <input type="radio" id="tab4" name="tab-control">
+        <input type="radio" id="tab5" name="tab-control">
+        <ul>
+          <li>
+            <label for="tab1" role="button">
+              <div class="lang">
+                <img src=${ICON_ASSETS + 'javascript.png'} />
+                <div>javascript</div>
+              </div>
+            </label>
+          </li>
+          <li>
+            <label for="tab2" role="button">
+              <div class="lang">
+                <img src=${ICON_ASSETS + 'elixir.png'} />
+                <div>elixir</div>
+              </div>
+            </label>
+          </li>
+          <li>
+            <label for="tab3" role="button">
+              <div class="lang">
+                <img src=${ICON_ASSETS + 'ruby.png'} />
+                <div>ruby</div>
+              </div>
+            </label>
+          </li>
 
-        <li title="Delivery Contents">
-          <label for="tab4" role="button">
-            <div class="lang">
-              <img src=${ICON_ASSETS + 'java.png'} />
-              <div>java</div>
-            </div>
-          </label>
-        </li>
-      </ul>
+          <li>
+            <label for="tab4" role="button">
+              <div class="lang">
+                <img src=${ICON_ASSETS + 'java.png'} />
+                <div>java</div>
+              </div>
+            </label>
+          </li>
 
-      <div class="slider"><div class="indicator"></div></div>
+          <li>
+            <label for="tab5" role="button">
+              <div class="lang">
+                <img src=${ICON_ASSETS + 'clojure.png'} />
+                <div>colojure</div>
+              </div>
+            </label>
+          </li>
+        </ul>
 
-    </div>
+        <div class="slider"><div class="indicator"></div></div>
+      </div>
     `
     })
 
@@ -340,8 +350,8 @@ export default class Code {
       /* if (this.data.type === item.type) this.highlightSettingIcon(itemEl) */
       /*  */
       /* itemEl.addEventListener('click', () => { */
-        /* this.setAlertType(item.type); */
-        /* this.highlightSettingIcon(itemEl) */
+      /* this.setAlertType(item.type); */
+      /* this.highlightSettingIcon(itemEl) */
       /* }); */
 
       Wrapper.appendChild(itemEl);

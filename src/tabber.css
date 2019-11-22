@@ -1,4 +1,4 @@
-.tabs-wrapper {
+.cdx-code-tabs-wrapper {
   display: flex;
   justify-content: flex-start;
 }
@@ -7,7 +7,7 @@
 /* tab setting */
 /* breakpoints */
 /* selectors relative to radio inputs */
-.tabs {
+.cdx-code-tabs {
   position: relative;
   width: 100%;
   height: 60px;
@@ -15,16 +15,16 @@
   border-bottom: none;
   margin-top: 20px;
 }
-.tabs input[name="tab-control"] {
+.cdx-code-tabs input[name="tab-control"] {
   display: none;
 }
-.tabs ul li label {
+.cdx-code-tabs ul li label {
   font-family: sans-serif;
   font-weight: normal;
   font-size: 16px;
   color: #428bff;
 }
-.tabs ul {
+.cdx-code-tabs ul {
   list-style-type: none;
   padding-left: 0;
   display: flex;
@@ -37,14 +37,14 @@
   padding-bottom: 10px;
   border-bottom: 1px solid #f1f1f1;
 }
-.tabs ul li {
+.cdx-code-tabs ul li {
   box-sizing: border-box;
   flex: 1;
   width: 25%;
   padding: 0 10px;
   text-align: center;
 }
-.tabs ul li label {
+.cdx-code-tabs ul li label {
   transition: all 0.3s ease-in-out;
   color: #929daf;
   padding: 5px auto;
@@ -57,42 +57,38 @@
   -webkit-touch-callout: none;
 }
 
-.tabs ul li label .lang {
+.cdx-code-tabs ul li label .lang {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tabs ul li label .lang img {
+.cdx-code-tabs ul li label .lang img {
   width: 14px;
   height: 14px;
   margin-right: 6px;
 }
 
-.tabs ul li label svg {
+.cdx-code-tabs ul li label svg {
   fill: #929daf;
   height: 1.2em;
   vertical-align: bottom;
   margin-right: 0.2em;
   transition: all 0.2s ease-in-out;
 }
-.tabs ul li label:hover,
-.tabs ul li label:focus,
-.tabs ul li label:active {
+.cdx-code-tabs ul li label:hover,
+.cdx-code-tabs ul li label:focus,
+.cdx-code-tabs ul li label:active {
   outline: 0;
   color: #bec5cf;
 }
-.tabs ul li label:hover svg,
-.tabs ul li label:focus svg,
-.tabs ul li label:active svg {
-  fill: #bec5cf;
-}
-.tabs .slider {
+
+.cdx-code-tabs .slider {
   position: relative;
-  width: 25%;
+  width: 20%;
   transition: all 0.33s cubic-bezier(0.38, 0.8, 0.32, 1.07);
 }
-.tabs .slider .indicator {
+.cdx-code-tabs .slider .indicator {
   position: relative;
   width: 30px;
   max-width: 100%;
@@ -102,7 +98,8 @@
   border-radius: 2px;
   margin-top: -2px;
 }
-.tabs
+
+.cdx-code-tabs
   input[name="tab-control"]:nth-of-type(1):checked
   ~ ul
   > li:nth-child(1)
@@ -110,14 +107,7 @@
   cursor: default;
   color: #929daf;
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(1):checked
-  ~ ul
-  > li:nth-child(1)
-  > label
-  svg {
-  fill: #929daf;
-}
+
 @media (max-width: 600px) {
   .tabs
     input[name="tab-control"]:nth-of-type(1):checked
@@ -127,17 +117,12 @@
     background: rgba(0, 0, 0, 0.08);
   }
 }
-.tabs input[name="tab-control"]:nth-of-type(1):checked ~ .slider {
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(1):checked ~ .slider {
   -webkit-transform: translateX(0%);
   transform: translateX(0%);
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(1):checked
-  ~ .content
-  > section:nth-child(1) {
-  display: block;
-}
-.tabs
+
+.cdx-code-tabs
   input[name="tab-control"]:nth-of-type(2):checked
   ~ ul
   > li:nth-child(2)
@@ -145,14 +130,7 @@
   cursor: default;
   color: #929daf;
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(2):checked
-  ~ ul
-  > li:nth-child(2)
-  > label
-  svg {
-  fill: #428bff;
-}
+
 @media (max-width: 600px) {
   .tabs
     input[name="tab-control"]:nth-of-type(2):checked
@@ -162,17 +140,12 @@
     background: rgba(0, 0, 0, 0.08);
   }
 }
-.tabs input[name="tab-control"]:nth-of-type(2):checked ~ .slider {
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(2):checked ~ .slider {
   -webkit-transform: translateX(100%);
   transform: translateX(100%);
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(2):checked
-  ~ .content
-  > section:nth-child(2) {
-  display: block;
-}
-.tabs
+
+.cdx-code-tabs
   input[name="tab-control"]:nth-of-type(3):checked
   ~ ul
   > li:nth-child(3)
@@ -180,16 +153,9 @@
   cursor: default;
   color: #929daf;
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(3):checked
-  ~ ul
-  > li:nth-child(3)
-  > label
-  svg {
-  fill: #428bff;
-}
+
 @media (max-width: 600px) {
-  .tabs
+  .cdx-code-tabs
     input[name="tab-control"]:nth-of-type(3):checked
     ~ ul
     > li:nth-child(3)
@@ -197,17 +163,12 @@
     background: rgba(0, 0, 0, 0.08);
   }
 }
-.tabs input[name="tab-control"]:nth-of-type(3):checked ~ .slider {
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(3):checked ~ .slider {
   -webkit-transform: translateX(200%);
   transform: translateX(200%);
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(3):checked
-  ~ .content
-  > section:nth-child(3) {
-  display: block;
-}
-.tabs
+
+.cdx-code-tabs
   input[name="tab-control"]:nth-of-type(4):checked
   ~ ul
   > li:nth-child(4)
@@ -215,14 +176,7 @@
   cursor: default;
   color: #929daf;
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(4):checked
-  ~ ul
-  > li:nth-child(4)
-  > label
-  svg {
-  fill: #428bff;
-}
+
 @media (max-width: 600px) {
   .tabs
     input[name="tab-control"]:nth-of-type(4):checked
@@ -232,36 +186,52 @@
     background: rgba(0, 0, 0, 0.08);
   }
 }
-.tabs input[name="tab-control"]:nth-of-type(4):checked ~ .slider {
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(4):checked ~ .slider {
   -webkit-transform: translateX(300%);
   transform: translateX(300%);
 }
-.tabs
-  input[name="tab-control"]:nth-of-type(4):checked
-  ~ .content
-  > section:nth-child(4) {
-  display: block;
+
+.cdx-code-tabs
+  input[name="tab-control"]:nth-of-type(5):checked
+  ~ ul
+  > li:nth-child(5)
+  > label {
+  cursor: default;
+  color: #929daf;
 }
+
+@media (max-width: 600px) {
+  .tabs
+    input[name="tab-control"]:nth-of-type(5):checked
+    ~ ul
+    > li:nth-child(4)
+    > label {
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(5):checked ~ .slider {
+  -webkit-transform: translateX(400%);
+  transform: translateX(400%);
+}
+
+
 @media (max-width: 1000px) {
-  .tabs ul li label {
+  .cdx-code-tabs ul li label {
     white-space: initial;
   }
-  .tabs ul li label br {
+  .cdx-code-tabs ul li label br {
     display: initial;
-  }
-  .tabs ul li label svg {
-    height: 1.5em;
   }
 }
 @media (max-width: 600px) {
-  .tabs ul li label {
+  .cdx-code-tabs ul li label {
     padding: 5px;
     border-radius: 5px;
   }
-  .tabs ul li label span {
+  .cdx-code-tabs ul li label span {
     display: none;
   }
-  .tabs .slider {
+  .cdx-code-tabs .slider {
     display: none;
   }
 }

@@ -9,6 +9,7 @@ import Prism from "prismjs";
 import copyToClipboard from "copy-to-clipboard";
 
 import { getLangOptions, initSelector } from './lang_selector'
+import Tabber from './tabber'
 
 import CopyIcon from "./icon/copy.svg";
 import TabIcon from './icon/tab.svg'
@@ -104,7 +105,8 @@ export default class Code {
 
     this.data = {
       text: data.text || "",
-      lang: data.lang || "text"
+      lang: data.lang || "text",
+      temp: data.temp || '3'
     };
 
     this.settings = [
@@ -119,6 +121,12 @@ export default class Code {
         type: 'error',
       },
     ]
+
+    this.tabber = new Tabber({
+      api,
+      config,
+      data
+    })
 
     this.langInputEl = this._make("input", [this.CSS.langInput], {
       id: "lang-input",
@@ -147,64 +155,12 @@ export default class Code {
 
     const codeText = this.data.text;
 
-    const ICON_ASSETS = 'https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/'
-    const tabber = this._make('div', ['cdx-code-tabs-wrapper'], {
-      innerHTML: `
-      <div class="cdx-code-tabs">
-        <input type="radio" id="tab1" name="tab-control" checked>
-        <input type="radio" id="tab2" name="tab-control">
-        <input type="radio" id="tab3" name="tab-control">
-        <input type="radio" id="tab4" name="tab-control">
-        <input type="radio" id="tab5" name="tab-control">
-        <ul>
-          <li>
-            <label for="tab1" role="button">
-              <div class="lang">
-                <img src=${ICON_ASSETS + 'javascript.png'} />
-                <div>javascript</div>
-              </div>
-            </label>
-          </li>
-          <li>
-            <label for="tab2" role="button">
-              <div class="lang">
-                <img src=${ICON_ASSETS + 'elixir.png'} />
-                <div>elixir</div>
-              </div>
-            </label>
-          </li>
-          <li>
-            <label for="tab3" role="button">
-              <div class="lang">
-                <img src=${ICON_ASSETS + 'ruby.png'} />
-                <div>ruby</div>
-              </div>
-            </label>
-          </li>
+    let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure']
+    if (this.data.temp === '3') {
+      langs = ['javascript', 'r', 'ruby']
+    }
 
-          <li>
-            <label for="tab4" role="button">
-              <div class="lang">
-                <img src=${ICON_ASSETS + 'java.png'} />
-                <div>java</div>
-              </div>
-            </label>
-          </li>
-
-          <li>
-            <label for="tab5" role="button">
-              <div class="lang">
-                <img src=${ICON_ASSETS + 'clojure.png'} />
-                <div>colojure</div>
-              </div>
-            </label>
-          </li>
-        </ul>
-
-        <div class="slider"><div class="indicator"></div></div>
-      </div>
-    `
-    })
+    const tabber = this.tabber.renderTabs(langs)
 
     const container = this._make(
       "code",

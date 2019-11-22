@@ -9,7 +9,7 @@
 /* selectors relative to radio inputs */
 .cdx-code-tabs {
   position: relative;
-  width: 100%;
+  /*width: 100%; */
   height: 60px;
   min-width: 240px;
   border-bottom: none;
@@ -41,14 +41,13 @@
   box-sizing: border-box;
   flex: 1;
   width: 25%;
-  padding: 0 10px;
+  padding: 0 15px;
   text-align: center;
 }
 .cdx-code-tabs ul li label {
   transition: all 0.3s ease-in-out;
   color: #929daf;
   padding: 5px auto;
-  overflow: hidden;
   text-overflow: ellipsis;
   display: block;
   cursor: pointer;
@@ -66,7 +65,17 @@
 .cdx-code-tabs ul li label .lang img {
   width: 14px;
   height: 14px;
-  margin-right: 6px;
+}
+
+/* 33px matches ruby */
+.cdx-code-tabs ul li label .lang .title {
+  max-width: 50px;
+  min-width: 33px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding-left: 6px;
 }
 
 .cdx-code-tabs ul li label svg {
@@ -88,6 +97,23 @@
   width: 20%;
   transition: all 0.33s cubic-bezier(0.38, 0.8, 0.32, 1.07);
 }
+
+.cdx-code-tabs .slider-width-2 {
+  width: 50%;
+}
+
+.cdx-code-tabs .slider-width-3 {
+  width: 34%;
+}
+
+.cdx-code-tabs .slider-width-4 {
+  width: 25%;
+}
+
+.cdx-code-tabs .slider-width-5 {
+  width: 20%;
+}
+
 .cdx-code-tabs .slider .indicator {
   position: relative;
   width: 30px;

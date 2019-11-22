@@ -91,11 +91,14 @@ export default class Tabber {
       const element = langs[i];
       const tab_id = this.randomStr(4)
 
-      container.appendChild(this._make('input', null, {
+      const inputEl = this._make('input', null, {
         type: 'radio',
         id: tab_id,
         name: 'tab-control',
-      }))
+      })
+
+
+      container.appendChild(inputEl)
 
       const li = this._make('li', null, {
         innerHTML: `

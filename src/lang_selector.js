@@ -11,6 +11,7 @@ const LANGUAGES = [
   "ruby",
   "python",
   "rust",
+  "swift",
   "dart",
   "scala",
   "haskell",

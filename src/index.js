@@ -155,7 +155,8 @@ export default class Code {
 
     const codeText = this.data.text;
 
-    let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
+    // let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
+    let langs = ['javascript', 'python', 'swift', 'csharp', 'php']
     if (this.data.temp === '3') {
       langs = ['javascript', 'r', 'ruby']
     }

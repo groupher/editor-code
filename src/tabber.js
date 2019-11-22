@@ -7,6 +7,9 @@ const alias = (text) => {
   switch (text) {
     case 'javascript': return 'js..'
     case 'typescript': return 'ts..'
+    case 'php': return 'PHP'
+    case 'csharp': return 'C#..'
+    case 'python': return 'py..'
     case 'r': return 'R'
     default: return text
   }

@@ -114,6 +114,14 @@
   width: 20%;
 }
 
+.cdx-code-tabs .slider-width-6 {
+  width: 16.3%;
+}
+
+.cdx-code-tabs .slider-width-7 {
+  width: 14.1%;
+}
+
 .cdx-code-tabs .slider .indicator {
   position: relative;
   width: 30px;
@@ -134,15 +142,6 @@
   color: #929daf;
 }
 
-@media (max-width: 600px) {
-  .tabs
-    input[name="tab-control"]:nth-of-type(1):checked
-    ~ ul
-    > li:nth-child(1)
-    > label {
-    background: rgba(0, 0, 0, 0.08);
-  }
-}
 .cdx-code-tabs input[name="tab-control"]:nth-of-type(1):checked ~ .slider {
   -webkit-transform: translateX(0%);
   transform: translateX(0%);
@@ -157,15 +156,6 @@
   color: #929daf;
 }
 
-@media (max-width: 600px) {
-  .tabs
-    input[name="tab-control"]:nth-of-type(2):checked
-    ~ ul
-    > li:nth-child(2)
-    > label {
-    background: rgba(0, 0, 0, 0.08);
-  }
-}
 .cdx-code-tabs input[name="tab-control"]:nth-of-type(2):checked ~ .slider {
   -webkit-transform: translateX(100%);
   transform: translateX(100%);
@@ -180,15 +170,6 @@
   color: #929daf;
 }
 
-@media (max-width: 600px) {
-  .cdx-code-tabs
-    input[name="tab-control"]:nth-of-type(3):checked
-    ~ ul
-    > li:nth-child(3)
-    > label {
-    background: rgba(0, 0, 0, 0.08);
-  }
-}
 .cdx-code-tabs input[name="tab-control"]:nth-of-type(3):checked ~ .slider {
   -webkit-transform: translateX(200%);
   transform: translateX(200%);
@@ -203,15 +184,6 @@
   color: #929daf;
 }
 
-@media (max-width: 600px) {
-  .tabs
-    input[name="tab-control"]:nth-of-type(4):checked
-    ~ ul
-    > li:nth-child(4)
-    > label {
-    background: rgba(0, 0, 0, 0.08);
-  }
-}
 .cdx-code-tabs input[name="tab-control"]:nth-of-type(4):checked ~ .slider {
   -webkit-transform: translateX(300%);
   transform: translateX(300%);
@@ -225,19 +197,35 @@
   cursor: default;
   color: #929daf;
 }
-
-@media (max-width: 600px) {
-  .tabs
-    input[name="tab-control"]:nth-of-type(5):checked
-    ~ ul
-    > li:nth-child(4)
-    > label {
-    background: rgba(0, 0, 0, 0.08);
-  }
-}
 .cdx-code-tabs input[name="tab-control"]:nth-of-type(5):checked ~ .slider {
   -webkit-transform: translateX(400%);
   transform: translateX(400%);
+}
+
+.cdx-code-tabs
+  input[name="tab-control"]:nth-of-type(6):checked
+  ~ ul
+  > li:nth-child(6)
+  > label {
+  cursor: default;
+  color: #929daf;
+}
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(6):checked ~ .slider {
+  -webkit-transform: translateX(500%);
+  transform: translateX(500%);
+}
+
+.cdx-code-tabs
+  input[name="tab-control"]:nth-of-type(7):checked
+  ~ ul
+  > li:nth-child(7)
+  > label {
+  cursor: default;
+  color: #929daf;
+}
+.cdx-code-tabs input[name="tab-control"]:nth-of-type(7):checked ~ .slider {
+  -webkit-transform: translateX(600%);
+  transform: translateX(600%);
 }
 
 

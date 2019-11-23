@@ -1,27 +1,35 @@
 //
-import './tabber.css';
+import "./tabber.css";
+import DeleteIcon from "./icon/delete.svg";
 
-const ICON_ASSETS = 'https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/'
+const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
 
-const alias = (text) => {
+const alias = text => {
   switch (text) {
-    case 'javascript': return 'js..'
-    case 'typescript': return 'ts..'
-    case 'php': return 'PHP'
-    case 'csharp': return 'C#..'
-    case 'python': return 'py..'
-    case 'r': return 'R'
-    default: return text
+    case "javascript":
+      return "js..";
+    case "typescript":
+      return "ts..";
+    case "php":
+      return "PHP";
+    case "csharp":
+      return "C#..";
+    case "python":
+      return "py..";
+    case "r":
+      return "R";
+    default:
+      return text;
   }
-}
+};
 
 export default class Tabber {
   constructor({ api, config }) {
-    this.api = api
-    this.i18n = config.i18n || 'en'
-    this.config = config
+    this.api = api;
+    this.i18n = config.i18n || "en";
+    this.config = config;
 
-    this._data = {}
+    this._data = {};
     this.element = null;
   }
 
@@ -52,20 +60,21 @@ export default class Tabber {
     return {
       baseClass: this.api.styles.block,
       input: this.api.styles.input,
-      tabsWrapper: 'cdx-code-tabs-wrapper',
+      tabsWrapper: "cdx-code-tabs-wrapper"
     };
   }
 
   /**
    * generate uniq string
-   * 
+   *
    * @param {number: number, prefix: string}
    * @return {string}
    * @private
    */
   randomStr(length, prefix = "tab_") {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     var charactersLength = characters.length;
     for (var i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
@@ -75,69 +84,80 @@ export default class Tabber {
 
   // TODO:  refactor
   buildSlider(count) {
-    const wrapper = this._make('div', ["slider", `slider-width-${count}`], {
+    const wrapper = this._make("div", ["slider", `slider-width-${count}`], {
       innerHTML: '<div class="indicator" />'
-    })
+    });
 
-    return wrapper
+    return wrapper;
   }
 
   // TODO:  refactor
   buildTabs(langs) {
-    const container = this._make('div', ['cdx-code-tabs'], {})
-    const ul = this._make('ul', null, {})
+    const container = this._make("div", ["cdx-code-tabs"], {});
+    const ulEl = this._make("ul", null, {});
 
     for (let i = 0; i < langs.length; i++) {
       const element = langs[i];
-      const tab_id = this.randomStr(4)
+      const tab_id = this.randomStr(4);
 
-      const inputEl = this._make('input', null, {
-        type: 'radio',
+      const inputEl = this._make("input", null, {
+        type: "radio",
         id: tab_id,
-        name: 'tab-control',
-      })
+        name: "tab-control"
+      });
 
+      container.appendChild(inputEl);
 
-      container.appendChild(inputEl)
-
-      const li = this._make('li', null, {
+      const liEl = this._make("li", null, {
         innerHTML: `
           <label for="${tab_id}" role="button">
             <div class="lang">
-              <img src=${ICON_ASSETS + element + '.png'} />
+              <img src=${ICON_ASSETS + element + ".png"} />
               <div class="title">${alias(element)}</div>
             </div>
           </label>
         `
-      })
+      });
 
-      li.addEventListener('click', function () {
-        console.log('li click ev: ', element)
-      })
+      if (i !== 0) {
+        const deleteBtnEl = this._make("div", ["delete-btn"], {
+          innerHTML: DeleteIcon
+        });
+        liEl.appendChild(deleteBtnEl);
 
-      ul.appendChild(li)
+        deleteBtnEl.addEventListener("click", function(ev) {
+          ev.stopPropagation();
+          console.log("delete click: ", element);
+        });
+      }
+
+      liEl.addEventListener("click", function() {
+        console.log("li click ev: ", element);
+      });
+
+      ulEl.appendChild(liEl);
     }
 
-    container.appendChild(ul)
-    container.appendChild(this.buildSlider(langs.length))
+    container.appendChild(ulEl);
+    container.appendChild(this.buildSlider(langs.length));
 
-    return container
+    return container;
   }
 
   /**
    * render tabs, maximum is 5
-   * 
+   *
    * @param {array} lang labels
    * @return {HTMLElement}
    * @public
    */
   renderTabs(langs) {
-    const container = this._make('div', [this.CSS.tabsWrapper], {})
-    this.tabsEl = this.buildTabs(langs)
+    const container = this._make("div", [this.CSS.tabsWrapper], {});
+    this.tabsEl = this.buildTabs(langs);
 
-    container.appendChild(this.tabsEl)
+    container.appendChild(this.tabsEl);
 
-    return container
+    return container;
   }
 
   /**

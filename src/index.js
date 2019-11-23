@@ -8,12 +8,12 @@ import "./tabber.css";
 import Prism from "prismjs";
 import copyToClipboard from "copy-to-clipboard";
 
-import { getLangOptions, initSelector } from './lang_selector'
-import Tabber from './tabber'
+import { getLangOptions, initSelector } from "./lang_selector";
+import Tabber from "./tabber";
 
 import CopyIcon from "./icon/copy.svg";
-import TabIcon from './icon/tab.svg'
-import LinenoIcon from './icon/lineno.svg'
+import TabIcon from "./icon/tab.svg";
+import LinenoIcon from "./icon/lineno.svg";
 
 /**
  * @class Code
@@ -72,7 +72,7 @@ export default class Code {
     return {
       baseClass: this.api.styles.block,
       codeWrapper: "cdx-code-wrapper",
-      contentWrapper: 'cdx-code-content-wrapper',
+      contentWrapper: "cdx-code-content-wrapper",
       wrapper: "cdx-code",
       text: "cdx-code__text",
       langClass: "language-" + this.data.lang,
@@ -84,8 +84,8 @@ export default class Code {
       langInput: "cdx-code-lang_input",
 
       // settings
-      customSettingWrapper: 'cdx-custom-setting-wrapper',
-      settingsButton: 'cdx-settings-button',
+      customSettingWrapper: "cdx-custom-setting-wrapper",
+      settingsButton: "cdx-settings-button"
     };
   }
 
@@ -101,32 +101,31 @@ export default class Code {
     this.api = api;
     this.i18n = config.i18n || "en";
 
-    this.element = null
+    this.element = null;
 
     this.data = {
       text: data.text || "",
-      lang: data.lang || "text",
-      temp: data.temp || '3'
+      lang: data.lang || "text"
     };
 
     this.settings = [
       {
-        title: '增加标签页',
+        title: "增加标签页",
         icon: TabIcon,
-        type: 'warning',
+        type: "warning"
       },
       {
-        title: '显示行号',
+        title: "显示行号",
         icon: LinenoIcon,
-        type: 'error',
-      },
-    ]
+        type: "error"
+      }
+    ];
 
     this.tabber = new Tabber({
       api,
       config,
       data
-    })
+    });
 
     this.langInputEl = this._make("input", [this.CSS.langInput], {
       id: "lang-input",
@@ -156,12 +155,9 @@ export default class Code {
     const codeText = this.data.text;
 
     // let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
-    let langs = ['javascript', 'python', 'swift', 'csharp', 'php']
-    if (this.data.temp === '3') {
-      langs = ['javascript', 'r', 'ruby']
-    }
+    let langs = ["javascript", "python", "swift", "csharp", "php", "clojure"];
 
-    const tabber = this.tabber.renderTabs(langs)
+    const tabber = this.tabber.renderTabs(langs);
 
     const container = this._make(
       "code",
@@ -171,7 +167,7 @@ export default class Code {
       }
     );
 
-    this.langOptions = getLangOptions()
+    this.langOptions = getLangOptions();
 
     const cornerWrapper = this._make("div", [this.CSS.cornerWrapper]);
 
@@ -183,16 +179,15 @@ export default class Code {
         innerText: option.title
       });
 
-      optionEl.setAttribute('data-src', option.icon)
+      optionEl.setAttribute("data-src", option.icon);
 
       langLabel.appendChild(optionEl);
     });
 
     // Pass single element
     setTimeout(() => {
-      initSelector(langLabel)
+      initSelector(langLabel);
     }, 100);
-
 
     // const LANG_SUGGESTIONS = [
     //   {
@@ -212,7 +207,7 @@ export default class Code {
     cornerWrapper.appendChild(langLabel);
     cornerWrapper.appendChild(copyLabel);
 
-    this.element.appendChild(tabber)
+    this.element.appendChild(tabber);
     container.appendChild(code);
 
     this.contentWrapper.appendChild(container);
@@ -296,10 +291,10 @@ export default class Code {
    * @returns {HTMLDivElement}
    */
   renderSettings() {
-    const Wrapper = this._make('DIV', [this.CSS.customSettingWrapper], {})
+    const Wrapper = this._make("DIV", [this.CSS.customSettingWrapper], {});
 
-    this.settings.forEach((item) => {
-      const itemEl = this._make('div', [this.CSS.settingsButton], {
+    this.settings.forEach(item => {
+      const itemEl = this._make("div", [this.CSS.settingsButton], {
         title: item.title,
         innerHTML: item.icon
       });
@@ -314,7 +309,7 @@ export default class Code {
       Wrapper.appendChild(itemEl);
     });
 
-    return Wrapper
+    return Wrapper;
   }
 
   /**

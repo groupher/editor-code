@@ -1,6 +1,6 @@
 import Selectr from "mobius1-selectr";
 
-const ICON_ASSETS = 'https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/'
+const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
 
 const LANGUAGES = [
   "javascript",
@@ -36,25 +36,25 @@ const LANGUAGES = [
   "c",
   "java",
   "csharp",
-  "cpp",
-]
+  "cpp"
+];
 
-let options = []
+let options = [];
 
 // TODO:  将当前选中的那一项放在最顶上
 export const getLangOptions = () => {
-  if (options.length !== 0) return options
+  if (options.length !== 0) return options;
 
   LANGUAGES.forEach(lang => {
     options.push({
       value: lang,
       title: lang,
-      icon: ICON_ASSETS + lang + '.png'
-    })
-  })
+      icon: ICON_ASSETS + lang + ".png"
+    });
+  });
 
-  return options
-}
+  return options;
+};
 
 /**
  * init the selectr plugin
@@ -65,16 +65,18 @@ export const getLangOptions = () => {
  *   icon - lang icon
  * @returns {boolean}
  */
-// see https://github.com/Mobius1/Selectr/wiki/Options#renderoption for details 
-const renderOption = (option) => {
+// see https://github.com/Mobius1/Selectr/wiki/Options#renderoption for details
+const renderOption = option => {
   const template = [
-    "<div class='selectr-lang-template'><img src='", option.dataset.src, "'><span>",
+    "<div class='selectr-lang-template'><img src='",
+    option.dataset.src,
+    "'><span>",
     option.textContent,
     "</span></div>"
   ];
 
-  return template.join('');
-}
+  return template.join("");
+};
 
 /**
  * init the selectr plugin
@@ -84,25 +86,29 @@ const renderOption = (option) => {
  * @param {func} onChange - label change callback
  * @returns {boolean}
  */
-export const initSelector = (el, activeLabel = 'javascript', onChange) => {
-  return new Selectr(el, {
+export const initSelector = (el, activeLabel = "javascript", onChange) => {
+  const selector = new Selectr(el, {
     renderOption: renderOption,
     messages: {
-      noResults: "未找到该标签",
-    },
-  }).on('selectr.init', function () {
-    this.setValue(activeLabel)
-    console.log('init: ', this)
+      noResults: "未找到该标签"
+    }
+  });
 
-    this.input.placeholder = activeLabel
-    this.input.addEventListener('blur', () => this.close())
-    this.label.addEventListener('DOMSubtreeModified', ({ target: { innerText } }) => {
-      if (innerText) {
-        this.input.placeholder = innerText
-        if (onChange) onChange(innerText)
+  selector.on("selectr.init", function() {
+    this.setValue(activeLabel);
+
+    this.input.placeholder = activeLabel;
+    this.input.addEventListener("blur", () => this.close());
+    this.label.addEventListener(
+      "DOMSubtreeModified",
+      ({ target: { innerText } }) => {
+        if (innerText) {
+          this.input.placeholder = innerText;
+          if (onChange) onChange(innerText);
+        }
       }
-    })
-  })
+    );
+  });
   // .on('selectr.open', function () {
   //   this.input.placeholder = 'javascript'
 
@@ -111,4 +117,5 @@ export const initSelector = (el, activeLabel = 'javascript', onChange) => {
   //     this.close()
   //   })
   // })
-}
+  return selector;
+};

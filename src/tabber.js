@@ -10,10 +10,8 @@ const alias = text => {
       return "js..";
     case "typescript":
       return "ts..";
-    case "php":
-      return "PHP";
     case "csharp":
-      return "C#..";
+      return "c#..";
     case "python":
       return "py..";
     case "r":
@@ -24,13 +22,16 @@ const alias = text => {
 };
 
 export default class Tabber {
-  constructor({ api, config }) {
+  constructor({ api, config, switchTab, removeTab }) {
     this.api = api;
     this.i18n = config.i18n || "en";
     this.config = config;
 
     this._data = {};
-    this.element = null;
+    this.fuck = null;
+
+    this.switchTab = switchTab;
+    this.removeTab = removeTab;
   }
 
   /**
@@ -91,7 +92,13 @@ export default class Tabber {
     return wrapper;
   }
 
-  // TODO:  refactor
+  /**
+   * generate uniq string
+   *
+   * @param {langs: array[{index: number, lang: string}]}, langs arrays
+   * @return {HTMLElement}
+   * @public
+   */
   buildTabs(langs) {
     const container = this._make("div", ["cdx-code-tabs"], {});
     const ulEl = this._make("ul", null, {});
@@ -112,28 +119,27 @@ export default class Tabber {
         innerHTML: `
           <label for="${tab_id}" role="button">
             <div class="lang">
-              <img src=${ICON_ASSETS + element + ".png"} />
-              <div class="title">${alias(element)}</div>
+              <img src=${ICON_ASSETS + element.lang + ".png"} />
+              <div class="title">${alias(element.lang)}</div>
             </div>
           </label>
         `
       });
 
+      // first tab should not be deleted
       if (i !== 0) {
         const deleteBtnEl = this._make("div", ["delete-btn"], {
           innerHTML: DeleteIcon
         });
         liEl.appendChild(deleteBtnEl);
 
-        deleteBtnEl.addEventListener("click", function(ev) {
+        deleteBtnEl.addEventListener("click", ev => {
           ev.stopPropagation();
-          console.log("delete click: ", element);
+          this.removeTab(element);
         });
       }
 
-      liEl.addEventListener("click", function() {
-        console.log("li click ev: ", element);
-      });
+      liEl.addEventListener("click", () => this.switchTab(element));
 
       ulEl.appendChild(liEl);
     }

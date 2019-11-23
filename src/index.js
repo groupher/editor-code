@@ -15,6 +15,11 @@ import CopyIcon from "./icon/copy.svg";
 import TabIcon from "./icon/tab.svg";
 import LinenoIcon from "./icon/lineno.svg";
 
+// TODO:  move to utils
+function startsWith(str, word) {
+  return str.lastIndexOf(word, 0) === 0;
+}
+
 /**
  * @class Code
  * @classdesc Code Tool for Editor.js
@@ -102,6 +107,8 @@ export default class Code {
     this.i18n = config.i18n || "en";
 
     this.element = null;
+    this.codeContainer = null;
+    this.langSelector = null;
 
     this.data = {
       text: data.text || "",
@@ -124,7 +131,9 @@ export default class Code {
     this.tabber = new Tabber({
       api,
       config,
-      data
+      data,
+      switchTab: this.switchTab.bind(this),
+      removeTab: this.removeTab.bind(this)
     });
 
     this.langInputEl = this._make("input", [this.CSS.langInput], {
@@ -133,7 +142,21 @@ export default class Code {
     });
   }
 
-  highlightCodeSyntax(element) {
+  switchTab(data) {
+    const curClass = this.codeContainer.classList.value;
+    const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
+
+    this.codeContainer.classList = classedWithLang + " language-" + data.lang;
+    this.highlightCodeSyntax();
+    this.langSelector.setValue(data.lang);
+  }
+
+  removeTab(lang) {
+    console.log("removeTab lang: ", lang);
+  }
+
+  highlightCodeSyntax() {
+    const element = this.codeContainer;
     console.log("inside highlightCodeSyntax.....");
 
     // see: https://github.com/PrismJS/prism/issues/832#issuecomment-300175499
@@ -154,12 +177,38 @@ export default class Code {
 
     const codeText = this.data.text;
 
-    // let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
-    let langs = ["javascript", "python", "swift", "csharp", "php", "clojure"];
+    let langs = [
+      {
+        index: 0,
+        lang: "javascript"
+      },
+      {
+        index: 1,
+        lang: "python"
+      },
+      {
+        index: 2,
+        lang: "swift"
+      },
+      {
+        index: 3,
+        lang: "csharp"
+      },
+      {
+        index: 4,
+        lang: "php"
+      },
+      {
+        index: 5,
+        lang: "clojure"
+      }
+    ];
 
+    // let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
+    // let langs = ["javascript", "python", "swift", "csharp", "php", "clojure"];
     const tabber = this.tabber.renderTabs(langs);
 
-    const container = this._make(
+    this.codeContainer = this._make(
       "code",
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
       {
@@ -174,7 +223,7 @@ export default class Code {
     const langLabel = this._make("select", [this.CSS.langLabel], {});
 
     this.langOptions.forEach(option => {
-      const optionEl = this._make("option", ["hello"], {
+      const optionEl = this._make("option", null, {
         value: option.value,
         innerText: option.title
       });
@@ -186,7 +235,7 @@ export default class Code {
 
     // Pass single element
     setTimeout(() => {
-      initSelector(langLabel);
+      this.langSelector = initSelector(langLabel);
     }, 100);
 
     // const LANG_SUGGESTIONS = [
@@ -208,16 +257,16 @@ export default class Code {
     cornerWrapper.appendChild(copyLabel);
 
     this.element.appendChild(tabber);
-    container.appendChild(code);
+    this.codeContainer.appendChild(code);
 
-    this.contentWrapper.appendChild(container);
+    this.contentWrapper.appendChild(this.codeContainer);
     this.contentWrapper.appendChild(cornerWrapper);
 
     // this.element.appendChild(container);
     // this.element.appendChild(cornerWrapper);
     this.element.appendChild(this.contentWrapper);
 
-    this.highlightCodeSyntax(container);
+    this.highlightCodeSyntax();
 
     // open lang settings
     // langLabel.addEventListener("click2", () => {
@@ -238,20 +287,20 @@ export default class Code {
       }, 2000);
     });
 
-    container.addEventListener("blur", () => {
-      this.highlightCodeSyntax(container);
+    this.codeContainer.addEventListener("blur", () => {
+      this.highlightCodeSyntax();
     });
 
     this.langInputEl.addEventListener("blur", ({ target: { value } }) => {
       const oldLangClass = "language-" + this.data.lang;
       const newLangClass = "language-" + value;
 
-      container.classList.remove(oldLangClass);
-      container.classList.add(newLangClass);
+      this.codeContainer.classList.remove(oldLangClass);
+      this.codeContainer.classList.add(newLangClass);
 
       this.data = { lang: value.toLowerCase() };
 
-      this.highlightCodeSyntax(container);
+      this.highlightCodeSyntax();
       this.api.toolbar.close();
       langLabel.innerText = this.data.lang;
     });

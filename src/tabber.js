@@ -1,6 +1,6 @@
-//
-import "./tabber.css";
 import DeleteIcon from "./icon/delete.svg";
+
+import "./tabber.css";
 
 const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
 
@@ -190,9 +190,6 @@ export default class Tabber {
 
     return container;
   }
-
-  // TODO:  changeTabInfo(index, data)
-  // TODO:  addTab(index, data)
 
   /**
    * Helper method for elements creation

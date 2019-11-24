@@ -28,7 +28,7 @@ export default class Tabber {
     this.config = config;
 
     this._data = {};
-    this.fuck = null;
+    this.sliderEl = null;
 
     this.switchTab = switchTab;
     this.removeTab = removeTab;
@@ -85,11 +85,18 @@ export default class Tabber {
 
   // TODO:  refactor
   buildSlider(count) {
-    const wrapper = this._make("div", ["slider", `slider-width-${count}`], {
+    this.sliderEl = this._make("div", ["slider", `slider-width-${count}`], {
       innerHTML: '<div class="indicator" />'
     });
 
-    return wrapper;
+    return this.sliderEl;
+  }
+
+  // 使用 CSS 会导致多个 code block tabs 相互冲突
+  moveIndicator(index) {
+    const unit = index < 0 ? 0 : index * 100;
+
+    this.sliderEl.style.transform = `translateX(${unit}%)`;
   }
 
   /**
@@ -165,6 +172,9 @@ export default class Tabber {
 
     return container;
   }
+
+  // TODO:  changeTabInfo(index, data)
+  // TODO:  addTab(index, data)
 
   /**
    * Helper method for elements creation

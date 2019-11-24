@@ -7,6 +7,8 @@ const LANGUAGES = [
   "elixir",
   "swift",
   "typescript",
+  "css",
+  "html",
   "go",
   "ruby",
   "python",
@@ -36,7 +38,8 @@ const LANGUAGES = [
   "c",
   "java",
   "csharp",
-  "cpp"
+  "cpp",
+  "shell"
 ];
 
 let options = [];
@@ -99,23 +102,20 @@ export const initSelector = (el, activeLabel = "javascript", onChange) => {
 
     this.input.placeholder = activeLabel;
     this.input.addEventListener("blur", () => this.close());
-    this.label.addEventListener(
-      "DOMSubtreeModified",
-      ({ target: { innerText } }) => {
-        if (innerText) {
-          this.input.placeholder = innerText;
-          if (onChange) onChange(innerText);
-        }
-      }
-    );
   });
-  // .on('selectr.open', function () {
-  //   this.input.placeholder = 'javascript'
 
-  //   this.input.addEventListener('blur', () => {
-  //     console.log('blur')
-  //     this.close()
-  //   })
-  // })
+  selector.on("selectr.open", function() {
+    this.input.placeholder = activeLabel;
+
+    this.input.addEventListener("blur", () => this.close());
+  });
+
+  selector.on("selectr.change", function(option) {
+    this.input.placeholder = option.innerText;
+    if (onChange) {
+      onChange(option.innerText);
+    }
+  });
+
   return selector;
 };

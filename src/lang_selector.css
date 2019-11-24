@@ -71,6 +71,7 @@
 }
 
 .selectr-label {
+  font-family: monospace;
   display: none;
   color: #647b83;
   overflow: hidden;

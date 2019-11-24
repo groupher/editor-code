@@ -5,8 +5,9 @@ import "./index.css";
 import "./lang_selector.css";
 import "./tabber.css";
 
-import Prism from "prismjs";
 import copyToClipboard from "copy-to-clipboard";
+
+import { loadJS } from "./utils";
 
 import { getLangOptions, initSelector } from "./lang_selector";
 import Tabber from "./tabber";
@@ -15,10 +16,12 @@ import CopyIcon from "./icon/copy.svg";
 import TabIcon from "./icon/tab.svg";
 import LinenoIcon from "./icon/lineno.svg";
 
-// TODO:  move to utils
-function startsWith(str, word) {
-  return str.lastIndexOf(word, 0) === 0;
-}
+const scripts = {
+  prism:
+    "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js",
+  prismAutoloader:
+    "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js"
+};
 
 /**
  * @class Code
@@ -86,7 +89,6 @@ export default class Code {
       copySuccess: "cdx-code-lang_copy-success",
       cornerWrapper: "cdx-code-lang_corner_warpper",
       input: "cdx-code__input", // this.api.styles.input,
-      langInput: "cdx-code-lang_input",
 
       // settings
       customSettingWrapper: "cdx-custom-setting-wrapper",
@@ -109,11 +111,48 @@ export default class Code {
     this.element = null;
     this.codeContainer = null;
     this.langSelector = null;
+    this.tabberEl = null;
 
     this.data = {
       text: data.text || "",
       lang: data.lang || "text"
     };
+
+    loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
+    loadJS(scripts.prismAutoloader, null, document.body);
+
+    this.langs = [
+      {
+        index: 0,
+        lang: "javascript",
+        content: "alert('hello world')"
+      },
+      {
+        index: 1,
+        lang: "python",
+        content: `print "I'm Python. Nice to meet you!"`
+      },
+      {
+        index: 2,
+        lang: "swift",
+        content: "let swift = 2;"
+      },
+      {
+        index: 3,
+        lang: "csharp",
+        content: "let csharp = 3;"
+      },
+      {
+        index: 4,
+        lang: "php",
+        content: "let php = 4;"
+      },
+      {
+        index: 5,
+        lang: "clojure",
+        content: "let clojure = 5;"
+      }
+    ];
 
     this.settings = [
       {
@@ -135,39 +174,130 @@ export default class Code {
       switchTab: this.switchTab.bind(this),
       removeTab: this.removeTab.bind(this)
     });
-
-    this.langInputEl = this._make("input", [this.CSS.langInput], {
-      id: "lang-input",
-      value: this.data.lang.toLowerCase()
-    });
   }
 
-  switchTab(data) {
-    const curClass = this.codeContainer.classList.value;
-    const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
-
-    this.codeContainer.classList = classedWithLang + " language-" + data.lang;
-    this.highlightCodeSyntax();
-    this.langSelector.setValue(data.lang);
-  }
-
-  removeTab(lang) {
-    console.log("removeTab lang: ", lang);
-  }
-
-  highlightCodeSyntax() {
-    const element = this.codeContainer;
-    console.log("inside highlightCodeSyntax.....");
-
+  /**
+   * init prism config, highlight current code block
+   *
+   * @returns {void}
+   * @private
+   */
+  prismOnload() {
     // see: https://github.com/PrismJS/prism/issues/832#issuecomment-300175499
     Prism.hooks.add("before-highlight", env => {
       env.code = env.element.innerText;
     });
-    Prism.highlightElement(element);
+    this.highlightCodeSyntax();
+  }
+
+  // find index in current langs array
+  findIndex(array, targetIdx) {
+    let index = -1;
+
+    for (let i = 0; i < array.length; i += 1) {
+      if (array[i].index === targetIdx) {
+        index = i;
+        break;
+      }
+    }
+
+    return index;
   }
 
   /**
-   * Create Code Tool container with language input
+   * switch code block tab
+   * only call it when there is more then one block
+   *
+   * @param {{ index: number, lang: string, content: string, active: bool }} data - code block info
+   * @returns {void}
+   * @private
+   */
+  switchTab(data) {
+    const langArrayIndex = this.findIndex(this.langs, data.index);
+    this.tabber.moveIndicator(langArrayIndex);
+
+    const curClass = this.codeContainer.classList.value;
+    const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
+
+    this.langs.map(item => (item.active = false));
+    const curLang = this.langs.filter(item => item.index === data.index);
+    curLang[0].active = true;
+
+    this.codeContainer.innerText = curLang[0].content;
+    this.codeContainer.classList = classedWithLang + " language-" + data.lang;
+    this.langSelector.setValue(data.lang);
+    this.highlightCodeSyntax();
+  }
+
+  /**
+   * remove current code block tab
+   * only call it when there is more then one block
+   *
+   * @param {{ index: number, lang: string, content: string, active: bool }} data - code block info
+   * @returns {void}
+   * @private
+   */
+  removeTab(data) {
+    this.langs = this.langs.filter(item => item.index !== data.index);
+
+    this.reBuildTabs();
+  }
+
+  /**
+   * add a new tab with default shell syntax
+   *
+   * @returns {void}
+   * @private
+   */
+  addTab() {
+    const curIndexList = [];
+    for (let i = 0; i < this.langs.length; i += 1) {
+      curIndexList.push(this.langs[i].index);
+    }
+
+    const maxIndex = Math.max(...curIndexList);
+
+    this.langs.push({
+      index: maxIndex + 1,
+      lang: "shell",
+      content: ""
+    });
+
+    this.reBuildTabs();
+    this.api.toolbar.close();
+  }
+
+  /**
+   * re-render the current tabs with new code info list
+   *
+   * @param {boolean} whether switch to first tab
+   * @private
+   */
+  reBuildTabs(switchToFirstTab = true) {
+    const newTabberEl = this.tabber.renderTabs(this.langs);
+    this.element.replaceChild(newTabberEl, this.tabberEl);
+    this.tabberEl = newTabberEl;
+
+    if (switchToFirstTab) {
+      this.switchTab(this.langs[0]);
+    }
+  }
+
+  /**
+   * highlight code block when Prism plugin is valid
+   *
+   * @private
+   */
+  highlightCodeSyntax() {
+    const element = this.codeContainer;
+
+    if (element && Prism) {
+      Prism.highlightElement(element);
+    }
+  }
+
+  /**
+   * Create Code Tool container with language selector
    *
    * @returns {Element}
    */
@@ -175,38 +305,8 @@ export default class Code {
     this.element = this._make("div", [this.CSS.codeWrapper], {});
     this.contentWrapper = this._make("div", [this.CSS.contentWrapper], {});
 
+    // TODO:
     const codeText = this.data.text;
-
-    let langs = [
-      {
-        index: 0,
-        lang: "javascript"
-      },
-      {
-        index: 1,
-        lang: "python"
-      },
-      {
-        index: 2,
-        lang: "swift"
-      },
-      {
-        index: 3,
-        lang: "csharp"
-      },
-      {
-        index: 4,
-        lang: "php"
-      },
-      {
-        index: 5,
-        lang: "clojure"
-      }
-    ];
-
-    // let langs = ['javascript', 'ruby', 'elixir', 'php', 'clojure', 'erlang', 'java']
-    // let langs = ["javascript", "python", "swift", "csharp", "php", "clojure"];
-    const tabber = this.tabber.renderTabs(langs);
 
     this.codeContainer = this._make(
       "code",
@@ -216,96 +316,111 @@ export default class Code {
       }
     );
 
-    this.langOptions = getLangOptions();
+    const codeContent = this._make("div", [this.CSS.input, this.CSS.text], {
+      innerHTML: codeText
+    });
 
     const cornerWrapper = this._make("div", [this.CSS.cornerWrapper]);
-
     const langLabel = this._make("select", [this.CSS.langLabel], {});
 
-    this.langOptions.forEach(option => {
+    const copyLabel = this._make("div", [this.CSS.copyLabel], {
+      innerHTML: CopyIcon
+    });
+
+    cornerWrapper.appendChild(langLabel);
+    cornerWrapper.appendChild(copyLabel);
+
+    // TODO:  depands data structure
+    this.tabberEl = this.tabber.renderTabs(this.langs);
+    this.element.appendChild(this.tabberEl);
+
+    this.codeContainer.appendChild(codeContent);
+    this.contentWrapper.appendChild(this.codeContainer);
+    this.contentWrapper.appendChild(cornerWrapper);
+
+    this.element.appendChild(this.contentWrapper);
+
+    this.setupLangsOptions(langLabel);
+    this.highlightCodeSyntax();
+
+    copyLabel.addEventListener("click", () => this.handleCopyAction(copyLabel));
+
+    this.codeContainer.addEventListener("blur", () =>
+      this.highlightCodeSyntax()
+    );
+
+    // init selector after render element to dom
+    setTimeout(() => {
+      this.langSelector = initSelector(
+        langLabel,
+        "javascript",
+        this.selectLabelOnChange.bind(this)
+      );
+    }, 100);
+
+    return this.element;
+  }
+
+  /**
+   * handle language syntax selector
+   *
+   * @param {string} label - selected option
+   * @returns {void}
+   * @private
+   */
+  selectLabelOnChange(label) {
+    const activeTabs = this.langs.filter(item => item.active);
+    if (activeTabs.length <= 0) return false;
+
+    const activeTab = activeTabs[0];
+
+    if (activeTab.lang !== label) {
+      activeTab.lang = label;
+      this.reBuildTabs(false);
+      this.switchTab(activeTab);
+    }
+  }
+
+  /**
+   * load all options to select label
+   *
+   * @param {HTMLElement} el - copyLabel
+   * @returns {void}
+   * @private
+   */
+  setupLangsOptions(el) {
+    const options = getLangOptions();
+
+    options.forEach(option => {
       const optionEl = this._make("option", null, {
         value: option.value,
         innerText: option.title
       });
 
       optionEl.setAttribute("data-src", option.icon);
-
-      langLabel.appendChild(optionEl);
+      el.appendChild(optionEl);
     });
+  }
 
-    // Pass single element
+  /**
+   * handle copy action
+   *
+   * @param {HTMLElement} el - copyLabel
+   * @returns {void}
+   * @private
+   */
+  handleCopyAction(el) {
+    const content = this.codeContainer.innerText;
+
+    copyToClipboard(content);
+
+    el.innerHTML = "✔ 已复制";
+    el.classList.add(this.CSS.copySuccess);
+
     setTimeout(() => {
-      this.langSelector = initSelector(langLabel);
-    }, 100);
-
-    // const LANG_SUGGESTIONS = [
-    //   {
-    //     value: "elixir",
-    //     icon: "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/elixir.png"
-    //   }
-    // ];
-
-    const copyLabel = this._make("div", [this.CSS.copyLabel], {
-      innerHTML: CopyIcon
-    });
-
-    const code = this._make("div", [this.CSS.input, this.CSS.text], {
-      innerHTML: codeText
-    });
-
-    cornerWrapper.appendChild(langLabel);
-    cornerWrapper.appendChild(copyLabel);
-
-    this.element.appendChild(tabber);
-    this.codeContainer.appendChild(code);
-
-    this.contentWrapper.appendChild(this.codeContainer);
-    this.contentWrapper.appendChild(cornerWrapper);
-
-    // this.element.appendChild(container);
-    // this.element.appendChild(cornerWrapper);
-    this.element.appendChild(this.contentWrapper);
-
-    this.highlightCodeSyntax();
-
-    // open lang settings
-    // langLabel.addEventListener("click2", () => {
-    // NOTE:  this setTimeout is must
-    //   setTimeout(() => {
-    //     document.querySelector("." + this.CSS.settingsButton).click();
-    //   }, 100);
-    // });
-
-    copyLabel.addEventListener("click", () => {
-      copyLabel.innerHTML = "✔ 已复制";
-      copyLabel.classList.add(this.CSS.copySuccess);
-      copyToClipboard(codeText);
-
-      setTimeout(() => {
-        copyLabel.classList.remove(this.CSS.copySuccess);
-        copyLabel.innerHTML = CopyIcon;
-      }, 2000);
-    });
-
-    this.codeContainer.addEventListener("blur", () => {
-      this.highlightCodeSyntax();
-    });
-
-    this.langInputEl.addEventListener("blur", ({ target: { value } }) => {
-      const oldLangClass = "language-" + this.data.lang;
-      const newLangClass = "language-" + value;
-
-      this.codeContainer.classList.remove(oldLangClass);
-      this.codeContainer.classList.add(newLangClass);
-
-      this.data = { lang: value.toLowerCase() };
-
-      this.highlightCodeSyntax();
-      this.api.toolbar.close();
-      langLabel.innerText = this.data.lang;
-    });
-
-    return this.element;
+      el.classList.remove(this.CSS.copySuccess);
+      el.innerHTML = CopyIcon;
+    }, 2000);
   }
 
   /**
@@ -350,10 +465,10 @@ export default class Code {
 
       /* if (this.data.type === item.type) this.highlightSettingIcon(itemEl) */
       /*  */
-      /* itemEl.addEventListener('click', () => { */
-      /* this.setAlertType(item.type); */
-      /* this.highlightSettingIcon(itemEl) */
-      /* }); */
+
+      itemEl.addEventListener("click", () => {
+        this.addTab();
+      });
 
       Wrapper.appendChild(itemEl);
     });

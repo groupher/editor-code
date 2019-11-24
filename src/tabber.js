@@ -61,7 +61,9 @@ export default class Tabber {
     return {
       baseClass: this.api.styles.block,
       input: this.api.styles.input,
-      tabsWrapper: "cdx-code-tabs-wrapper"
+      tabsWrapper: "cdx-code-tabs-wrapper",
+      codeTabs: "cdx-code-tabs",
+      deleteBtn: "delete-btn"
     };
   }
 
@@ -83,7 +85,13 @@ export default class Tabber {
     return prefix + result;
   }
 
-  // TODO:  refactor
+  /**
+   * build the bottom slider
+   *
+   * @param {number} count - count of tabs
+   * @returns {HTMLElement}
+   * @public
+   */
   buildSlider(count) {
     this.sliderEl = this._make("div", ["slider", `slider-width-${count}`], {
       innerHTML: '<div class="indicator" />'
@@ -92,7 +100,17 @@ export default class Tabber {
     return this.sliderEl;
   }
 
-  // 使用 CSS 会导致多个 code block tabs 相互冲突
+  /**
+   *
+   * move bottom indicator by javascript
+   * NOTE:  use css will cause global name conflict
+   * 使用 CSS 会导致多个 code block tabs 相互冲突, 比如第二个 code 块在切换
+   * tab 的时候会将上一个代码块的 indicator 切到第一个
+   *
+   * @param {number}  - count of tabs
+   * @returns {void}
+   * @public
+   */
   moveIndicator(index) {
     const unit = index < 0 ? 0 : index * 100;
 
@@ -107,7 +125,7 @@ export default class Tabber {
    * @public
    */
   buildTabs(langs) {
-    const container = this._make("div", ["cdx-code-tabs"], {});
+    const container = this._make("div", [this.CSS.codeTabs], {});
     const ulEl = this._make("ul", null, {});
 
     for (let i = 0; i < langs.length; i++) {
@@ -135,7 +153,7 @@ export default class Tabber {
 
       // first tab should not be deleted
       if (i !== 0) {
-        const deleteBtnEl = this._make("div", ["delete-btn"], {
+        const deleteBtnEl = this._make("div", [this.CSS.deleteBtn], {
           innerHTML: DeleteIcon
         });
         liEl.appendChild(deleteBtnEl);

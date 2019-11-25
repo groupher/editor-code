@@ -110,22 +110,27 @@ export default class Code {
 
     this.element = null;
     this.codeContainer = null;
-    this.langSelector = null;
+    this.langsDataelector = null;
     this.tabberEl = null;
 
     this.data = {
-      text: data.text || "",
+      text: data.content || "",
       lang: data.lang || "text"
     };
 
     loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
     loadJS(scripts.prismAutoloader, null, document.body);
 
-    this.langs = [
+    this.langsData2 = {
+      content: "alert('hello world')",
+      lang: "javascript"
+    };
+
+    this.langsData = [
       {
         index: 0,
         lang: "javascript",
-        content: "alert('hello world')"
+        content: "alert('hello world from array')"
       },
       {
         index: 1,
@@ -153,6 +158,9 @@ export default class Code {
         content: "let clojure = 5;"
       }
     ];
+
+    // is code passed is array or not
+    this.isTabMode = Array.isArray(this.langsData);
 
     this.settings = [
       {
@@ -213,19 +221,19 @@ export default class Code {
    * @private
    */
   switchTab(data) {
-    const langArrayIndex = this.findIndex(this.langs, data.index);
+    const langArrayIndex = this.findIndex(this.langsData, data.index);
     this.tabber.moveIndicator(langArrayIndex);
 
     const curClass = this.codeContainer.classList.value;
     const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
 
-    this.langs.map(item => (item.active = false));
-    const curLang = this.langs.filter(item => item.index === data.index);
+    this.langsData.map(item => (item.active = false));
+    const curLang = this.langsData.filter(item => item.index === data.index);
     curLang[0].active = true;
 
     this.codeContainer.innerText = curLang[0].content;
     this.codeContainer.classList = classedWithLang + " language-" + data.lang;
-    this.langSelector.setValue(data.lang);
+    this.langsDataelector.setValue(data.lang);
     this.highlightCodeSyntax();
   }
 
@@ -238,7 +246,7 @@ export default class Code {
    * @private
    */
   removeTab(data) {
-    this.langs = this.langs.filter(item => item.index !== data.index);
+    this.langsData = this.langsData.filter(item => item.index !== data.index);
 
     this.reBuildTabs();
   }
@@ -251,13 +259,13 @@ export default class Code {
    */
   addTab() {
     const curIndexList = [];
-    for (let i = 0; i < this.langs.length; i += 1) {
-      curIndexList.push(this.langs[i].index);
+    for (let i = 0; i < this.langsData.length; i += 1) {
+      curIndexList.push(this.langsData[i].index);
     }
 
     const maxIndex = Math.max(...curIndexList);
 
-    this.langs.push({
+    this.langsDataData.push({
       index: maxIndex + 1,
       lang: "shell",
       content: ""
@@ -274,12 +282,12 @@ export default class Code {
    * @private
    */
   reBuildTabs(switchToFirstTab = true) {
-    const newTabberEl = this.tabber.renderTabs(this.langs);
+    const newTabberEl = this.tabber.renderTabs(this.langsData);
     this.element.replaceChild(newTabberEl, this.tabberEl);
     this.tabberEl = newTabberEl;
 
     if (switchToFirstTab) {
-      this.switchTab(this.langs[0]);
+      this.switchTab(this.langsData[0]);
     }
   }
 
@@ -305,8 +313,9 @@ export default class Code {
     this.element = this._make("div", [this.CSS.codeWrapper], {});
     this.contentWrapper = this._make("div", [this.CSS.contentWrapper], {});
 
-    // TODO:
-    const codeText = this.data.text;
+    const codeText = this.isTabMode
+      ? this.langsData[0].content
+      : this.data.content;
 
     this.codeContainer = this._make(
       "code",
@@ -331,8 +340,10 @@ export default class Code {
     cornerWrapper.appendChild(copyLabel);
 
     // TODO:  depands data structure
-    this.tabberEl = this.tabber.renderTabs(this.langs);
-    this.element.appendChild(this.tabberEl);
+    if (this.isTabMode) {
+      this.tabberEl = this.tabber.renderTabs(this.langsData);
+      this.element.appendChild(this.tabberEl);
+    }
 
     this.codeContainer.appendChild(codeContent);
     this.contentWrapper.appendChild(this.codeContainer);
@@ -351,7 +362,7 @@ export default class Code {
 
     // init selector after render element to dom
     setTimeout(() => {
-      this.langSelector = initSelector(
+      this.langsDataelector = initSelector(
         langLabel,
         "javascript",
         this.selectLabelOnChange.bind(this)
@@ -369,7 +380,7 @@ export default class Code {
    * @private
    */
   selectLabelOnChange(label) {
-    const activeTabs = this.langs.filter(item => item.active);
+    const activeTabs = this.langsData.filter(item => item.active);
     if (activeTabs.length <= 0) return false;
 
     const activeTab = activeTabs[0];

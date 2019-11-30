@@ -83,7 +83,9 @@ export default class Code {
       contentWrapper: "cdx-code-content-wrapper",
       wrapper: "cdx-code",
       text: "cdx-code__text",
-      langClass: "language-" + this.data.lang,
+      langClass: this.isTabMode
+        ? `language-${this.data[0].lang}`
+        : `language-${this.data.lang}`,
       langLabel: "cdx-code-lang_label",
       copyLabel: "cdx-code-lang_copy",
       copySuccess: "cdx-code-lang_copy-success",
@@ -110,53 +112,10 @@ export default class Code {
 
     this.element = null;
     this.codeContainer = null;
-    this.langsDataelector = null;
+    this.langSelector = null;
     this.tabberEl = null;
 
-    this.langsData = {
-      lang: "javascript",
-      content: "alert('hello world')"
-    };
-
-    this.langsData2 = [
-      {
-        index: 0,
-        lang: "javascript",
-        content: "alert('hello world from array')"
-      },
-      {
-        index: 1,
-        lang: "python",
-        content: `print "I'm Python. Nice to meet you!"`
-      },
-      {
-        index: 2,
-        lang: "swift",
-        content: "let swift = 2;"
-      },
-      {
-        index: 3,
-        lang: "csharp",
-        content: "let csharp = 3;"
-      },
-      {
-        index: 4,
-        lang: "php",
-        content: "let php = 4;"
-      },
-      {
-        index: 5,
-        lang: "clojure",
-        content: "let clojure = 5;"
-      }
-    ];
-
-    this.data = this.langsData2;
-
-    // this.data = {
-    //   text: data.content || "",
-    //   lang: data.lang || "text"
-    // };
+    this.data = data;
 
     loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
     loadJS(scripts.prismAutoloader, null, document.body);
@@ -235,7 +194,7 @@ export default class Code {
 
     this.codeContainer.innerText = curLang[0].content;
     this.codeContainer.classList = classedWithLang + " language-" + data.lang;
-    this.langsDataelector.setValue(data.lang);
+    this.langSelector.setValue(data.lang);
     this.highlightCodeSyntax();
   }
 
@@ -271,6 +230,11 @@ export default class Code {
       this.data = [{ ...this.data, index: 0 }];
       this.isTabMode = true;
     }
+
+    // index is grows in linear, but may not be one by one because the
+    // remove/add action, so just add the current-max-index + 1 as the new index
+    // index 是线性增长的，但是由于各种删除增加等操作，所以每次就以
+    // 目前最大的 index + 1 作为新的 index
 
     const curIndexList = [];
     for (let i = 0; i < this.data.length; i += 1) {
@@ -336,8 +300,6 @@ export default class Code {
 
     const codeText = this.isTabMode ? this.data[0].content : this.data.content;
 
-    console.log("isTabMode: ", this.isTabMode);
-
     this.codeContainer = this._make(
       "code",
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
@@ -383,7 +345,7 @@ export default class Code {
 
     // init selector after render element to dom
     setTimeout(() => {
-      this.langsDataelector = initSelector(
+      this.langSelector = initSelector(
         langLabel,
         "javascript",
         this.selectLabelOnChange.bind(this)
@@ -462,9 +424,7 @@ export default class Code {
    * @returns {CodeData}
    */
   save(codeElement) {
-    return Object.assign(this.data, {
-      text: codeElement.innerText
-    });
+    return this.data;
   }
 
   /**

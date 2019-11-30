@@ -113,20 +113,12 @@ export default class Code {
     this.langsDataelector = null;
     this.tabberEl = null;
 
-    this.data = {
-      text: data.content || "",
-      lang: data.lang || "text"
+    this.langsData = {
+      lang: "javascript",
+      content: "alert('hello world')"
     };
 
-    loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
-    loadJS(scripts.prismAutoloader, null, document.body);
-
-    this.langsData2 = {
-      content: "alert('hello world')",
-      lang: "javascript"
-    };
-
-    this.langsData = [
+    this.langsData2 = [
       {
         index: 0,
         lang: "javascript",
@@ -159,8 +151,18 @@ export default class Code {
       }
     ];
 
+    this.data = this.langsData2;
+
+    // this.data = {
+    //   text: data.content || "",
+    //   lang: data.lang || "text"
+    // };
+
+    loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
+    loadJS(scripts.prismAutoloader, null, document.body);
+
     // is code passed is array or not
-    this.isTabMode = Array.isArray(this.langsData);
+    this.isTabMode = Array.isArray(this.data);
 
     this.settings = [
       {
@@ -221,14 +223,14 @@ export default class Code {
    * @private
    */
   switchTab(data) {
-    const langArrayIndex = this.findIndex(this.langsData, data.index);
+    const langArrayIndex = this.findIndex(this.data, data.index);
     this.tabber.moveIndicator(langArrayIndex);
 
     const curClass = this.codeContainer.classList.value;
     const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
 
-    this.langsData.map(item => (item.active = false));
-    const curLang = this.langsData.filter(item => item.index === data.index);
+    this.data.map(item => (item.active = false));
+    const curLang = this.data.filter(item => item.index === data.index);
     curLang[0].active = true;
 
     this.codeContainer.innerText = curLang[0].content;
@@ -246,9 +248,16 @@ export default class Code {
    * @private
    */
   removeTab(data) {
-    this.langsData = this.langsData.filter(item => item.index !== data.index);
+    this.data = this.data.filter(item => item.index !== data.index);
 
-    this.reBuildTabs();
+    if (this.data.length === 1) {
+      this.isTabMode = false;
+      this.data = { ...this.data[0] };
+      this.element.removeChild(this.tabberEl);
+      this.tabberEl = null;
+    } else {
+      this.reBuildTabs();
+    }
   }
 
   /**
@@ -258,14 +267,19 @@ export default class Code {
    * @private
    */
   addTab() {
+    if (!this.isTabMode) {
+      this.data = [{ ...this.data, index: 0 }];
+      this.isTabMode = true;
+    }
+
     const curIndexList = [];
-    for (let i = 0; i < this.langsData.length; i += 1) {
-      curIndexList.push(this.langsData[i].index);
+    for (let i = 0; i < this.data.length; i += 1) {
+      curIndexList.push(this.data[i].index);
     }
 
     const maxIndex = Math.max(...curIndexList);
 
-    this.langsDataData.push({
+    this.data.push({
       index: maxIndex + 1,
       lang: "shell",
       content: ""
@@ -282,12 +296,19 @@ export default class Code {
    * @private
    */
   reBuildTabs(switchToFirstTab = true) {
-    const newTabberEl = this.tabber.renderTabs(this.langsData);
-    this.element.replaceChild(newTabberEl, this.tabberEl);
+    const newTabberEl = this.tabber.renderTabs(this.data);
+
+    if (this.tabberEl) {
+      this.element.replaceChild(newTabberEl, this.tabberEl);
+    } else {
+      // fist time when init tab not exist
+      this.element.insertBefore(newTabberEl, this.element.childNodes[0]);
+    }
+
     this.tabberEl = newTabberEl;
 
     if (switchToFirstTab) {
-      this.switchTab(this.langsData[0]);
+      this.switchTab(this.data[0]);
     }
   }
 
@@ -313,9 +334,9 @@ export default class Code {
     this.element = this._make("div", [this.CSS.codeWrapper], {});
     this.contentWrapper = this._make("div", [this.CSS.contentWrapper], {});
 
-    const codeText = this.isTabMode
-      ? this.langsData[0].content
-      : this.data.content;
+    const codeText = this.isTabMode ? this.data[0].content : this.data.content;
+
+    console.log("isTabMode: ", this.isTabMode);
 
     this.codeContainer = this._make(
       "code",
@@ -341,7 +362,7 @@ export default class Code {
 
     // TODO:  depands data structure
     if (this.isTabMode) {
-      this.tabberEl = this.tabber.renderTabs(this.langsData);
+      this.tabberEl = this.tabber.renderTabs(this.data);
       this.element.appendChild(this.tabberEl);
     }
 
@@ -380,7 +401,7 @@ export default class Code {
    * @private
    */
   selectLabelOnChange(label) {
-    const activeTabs = this.langsData.filter(item => item.active);
+    const activeTabs = this.data.filter(item => item.active);
     if (activeTabs.length <= 0) return false;
 
     const activeTab = activeTabs[0];

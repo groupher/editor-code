@@ -1,13 +1,12 @@
+import copyToClipboard from "copy-to-clipboard";
+import { make, loadJS } from '@groupher/editor-utils'
+
 /**
  * Build styles
  */
 import "./index.css";
 import "./lang_selector.css";
 import "./tabber.css";
-
-import copyToClipboard from "copy-to-clipboard";
-
-import { loadJS } from "./utils";
 
 import { getLangOptions, initSelector } from "./lang_selector";
 import Tabber from "./tabber";
@@ -302,13 +301,13 @@ export default class Code {
    * @returns {Element}
    */
   render() {
-    this.element = this._make("div", [this.CSS.codeWrapper], {});
-    this.contentWrapper = this._make("div", [this.CSS.contentWrapper], {});
+    this.element = make("div", [this.CSS.codeWrapper], {});
+    this.contentWrapper = make("div", [this.CSS.contentWrapper], {});
 
     // TODO:
     const codeText = this.data.text;
 
-    this.codeContainer = this._make(
+    this.codeContainer = make(
       "code",
       [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
       {
@@ -316,14 +315,14 @@ export default class Code {
       }
     );
 
-    const codeContent = this._make("div", [this.CSS.input, this.CSS.text], {
+    const codeContent = make("div", [this.CSS.input, this.CSS.text], {
       innerHTML: codeText
     });
 
-    const cornerWrapper = this._make("div", [this.CSS.cornerWrapper]);
-    const langLabel = this._make("select", [this.CSS.langLabel], {});
+    const cornerWrapper = make("div", [this.CSS.cornerWrapper]);
+    const langLabel = make("select", [this.CSS.langLabel], {});
 
-    const copyLabel = this._make("div", [this.CSS.copyLabel], {
+    const copyLabel = make("div", [this.CSS.copyLabel], {
       innerHTML: CopyIcon
     });
 
@@ -392,7 +391,7 @@ export default class Code {
     const options = getLangOptions();
 
     options.forEach(option => {
-      const optionEl = this._make("option", null, {
+      const optionEl = make("option", null, {
         value: option.value,
         innerText: option.title
       });
@@ -455,10 +454,10 @@ export default class Code {
    * @returns {HTMLDivElement}
    */
   renderSettings() {
-    const Wrapper = this._make("DIV", [this.CSS.customSettingWrapper], {});
+    const Wrapper = make("DIV", [this.CSS.customSettingWrapper]);
 
     this.settings.forEach(item => {
-      const itemEl = this._make("div", [this.CSS.settingsButton], {
+      const itemEl = make("div", [this.CSS.settingsButton], {
         title: item.title,
         innerHTML: item.icon
       });
@@ -474,29 +473,5 @@ export default class Code {
     });
 
     return Wrapper;
-  }
-
-  /**
-   * Helper for making Elements with attributes
-   *
-   * @param  {string} tagName           - new Element tag name
-   * @param  {array|string} classNames  - list or name of CSS classname(s)
-   * @param  {Object} attributes        - any attributes
-   * @return {Element}
-   */
-  _make(tagName, classNames = null, attributes = {}) {
-    let el = document.createElement(tagName);
-
-    if (Array.isArray(classNames)) {
-      el.classList.add(...classNames);
-    } else if (classNames) {
-      el.classList.add(classNames);
-    }
-
-    for (let attrName in attributes) {
-      el[attrName] = attributes[attrName];
-    }
-
-    return el;
   }
 }

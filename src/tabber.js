@@ -1,5 +1,6 @@
-import DeleteIcon from "./icon/delete.svg";
+import { make } from '@groupher/editor-utils'
 
+import DeleteIcon from "./icon/delete.svg";
 import "./tabber.css";
 
 const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
@@ -93,7 +94,7 @@ export default class Tabber {
    * @public
    */
   buildSlider(count) {
-    this.sliderEl = this._make("div", ["slider", `slider-width-${count}`], {
+    this.sliderEl = make("div", ["slider", `slider-width-${count}`], {
       innerHTML: '<div class="indicator" />'
     });
 
@@ -125,14 +126,14 @@ export default class Tabber {
    * @public
    */
   buildTabs(langs) {
-    const container = this._make("div", [this.CSS.codeTabs], {});
-    const ulEl = this._make("ul", null, {});
+    const container = make("div", [this.CSS.codeTabs], {});
+    const ulEl = make("ul", null, {});
 
     for (let i = 0; i < langs.length; i++) {
       const element = langs[i];
       const tab_id = this.randomStr(4);
 
-      const inputEl = this._make("input", null, {
+      const inputEl = make("input", null, {
         type: "radio",
         id: tab_id,
         name: "tab-control"
@@ -140,7 +141,7 @@ export default class Tabber {
 
       container.appendChild(inputEl);
 
-      const liEl = this._make("li", null, {
+      const liEl = make("li", null, {
         innerHTML: `
           <label for="${tab_id}" role="button">
             <div class="lang">
@@ -153,7 +154,7 @@ export default class Tabber {
 
       // first tab should not be deleted
       if (i !== 0) {
-        const deleteBtnEl = this._make("div", [this.CSS.deleteBtn], {
+        const deleteBtnEl = make("div", [this.CSS.deleteBtn], {
           innerHTML: DeleteIcon
         });
         liEl.appendChild(deleteBtnEl);
@@ -183,35 +184,12 @@ export default class Tabber {
    * @public
    */
   renderTabs(langs) {
-    const container = this._make("div", [this.CSS.tabsWrapper], {});
+    const container = make("div", [this.CSS.tabsWrapper], {});
     this.tabsEl = this.buildTabs(langs);
 
     container.appendChild(this.tabsEl);
 
     return container;
-  }
-
-  /**
-   * Helper method for elements creation
-   * @param tagName
-   * @param classNames
-   * @param attributes
-   * @return {HTMLElement}
-   */
-  _make(tagName, classNames = null, attributes = {}) {
-    const el = document.createElement(tagName);
-
-    if (Array.isArray(classNames)) {
-      el.classList.add(...classNames);
-    } else if (classNames) {
-      el.classList.add(classNames);
-    }
-
-    for (const attrName in attributes) {
-      el[attrName] = attributes[attrName];
-    }
-
-    return el;
   }
 }
 

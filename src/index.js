@@ -73,16 +73,18 @@ export default class Code {
   /**
    * Tool`s styles
    *
-   * @returns {{baseClass: string, wrapper: string, code: string, input: string, settingsButton: string, settingsButtonActive: string}}
+   * @returns {{block: string, wrapper: string, code: string, input: string, settingsButton: string, settingsButtonActive: string}}
    */
   get CSS() {
     return {
-      baseClass: this.api.styles.block,
+      block: this.api.styles.block,
       codeWrapper: "cdx-code-wrapper",
       contentWrapper: "cdx-code-content-wrapper",
       wrapper: "cdx-code",
       text: "cdx-code__text",
-      langClass: "language-" + this.data.lang,
+      langClass: this.isTabMode
+        ? `language-${this.data[0].lang}`
+        : `language-${this.data.lang}`,
       langLabel: "cdx-code-lang_label",
       copyLabel: "cdx-code-lang_copy",
       copySuccess: "cdx-code-lang_copy-success",
@@ -112,46 +114,13 @@ export default class Code {
     this.langSelector = null;
     this.tabberEl = null;
 
-    this.data = {
-      text: data.text || "",
-      lang: data.lang || "text"
-    };
+    this.data = data;
 
     loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
     loadJS(scripts.prismAutoloader, null, document.body);
 
-    this.langs = [
-      {
-        index: 0,
-        lang: "javascript",
-        content: "alert('hello world')"
-      },
-      {
-        index: 1,
-        lang: "python",
-        content: `print "I'm Python. Nice to meet you!"`
-      },
-      {
-        index: 2,
-        lang: "swift",
-        content: "let swift = 2;"
-      },
-      {
-        index: 3,
-        lang: "csharp",
-        content: "let csharp = 3;"
-      },
-      {
-        index: 4,
-        lang: "php",
-        content: "let php = 4;"
-      },
-      {
-        index: 5,
-        lang: "clojure",
-        content: "let clojure = 5;"
-      }
-    ];
+    // is code passed is array or not
+    this.isTabMode = Array.isArray(this.data);
 
     this.settings = [
       {
@@ -212,14 +181,14 @@ export default class Code {
    * @private
    */
   switchTab(data) {
-    const langArrayIndex = this.findIndex(this.langs, data.index);
+    const langArrayIndex = this.findIndex(this.data, data.index);
     this.tabber.moveIndicator(langArrayIndex);
 
     const curClass = this.codeContainer.classList.value;
     const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
 
-    this.langs.map(item => (item.active = false));
-    const curLang = this.langs.filter(item => item.index === data.index);
+    this.data.map(item => (item.active = false));
+    const curLang = this.data.filter(item => item.index === data.index);
     curLang[0].active = true;
 
     this.codeContainer.innerText = curLang[0].content;
@@ -237,9 +206,16 @@ export default class Code {
    * @private
    */
   removeTab(data) {
-    this.langs = this.langs.filter(item => item.index !== data.index);
+    this.data = this.data.filter(item => item.index !== data.index);
 
-    this.reBuildTabs();
+    if (this.data.length === 1) {
+      this.isTabMode = false;
+      this.data = { ...this.data[0] };
+      this.element.removeChild(this.tabberEl);
+      this.tabberEl = null;
+    } else {
+      this.reBuildTabs();
+    }
   }
 
   /**
@@ -249,14 +225,24 @@ export default class Code {
    * @private
    */
   addTab() {
+    if (!this.isTabMode) {
+      this.data = [{ ...this.data, index: 0 }];
+      this.isTabMode = true;
+    }
+
+    // index is grows in linear, but may not be one by one because the
+    // remove/add action, so just add the current-max-index + 1 as the new index
+    // index 是线性增长的，但是由于各种删除增加等操作，所以每次就以
+    // 目前最大的 index + 1 作为新的 index
+
     const curIndexList = [];
-    for (let i = 0; i < this.langs.length; i += 1) {
-      curIndexList.push(this.langs[i].index);
+    for (let i = 0; i < this.data.length; i += 1) {
+      curIndexList.push(this.data[i].index);
     }
 
     const maxIndex = Math.max(...curIndexList);
 
-    this.langs.push({
+    this.data.push({
       index: maxIndex + 1,
       lang: "shell",
       content: ""
@@ -273,12 +259,19 @@ export default class Code {
    * @private
    */
   reBuildTabs(switchToFirstTab = true) {
-    const newTabberEl = this.tabber.renderTabs(this.langs);
-    this.element.replaceChild(newTabberEl, this.tabberEl);
+    const newTabberEl = this.tabber.renderTabs(this.data);
+
+    if (this.tabberEl) {
+      this.element.replaceChild(newTabberEl, this.tabberEl);
+    } else {
+      // fist time when init tab not exist
+      this.element.insertBefore(newTabberEl, this.element.childNodes[0]);
+    }
+
     this.tabberEl = newTabberEl;
 
     if (switchToFirstTab) {
-      this.switchTab(this.langs[0]);
+      this.switchTab(this.data[0]);
     }
   }
 
@@ -301,15 +294,14 @@ export default class Code {
    * @returns {Element}
    */
   render() {
-    this.element = make("div", [this.CSS.codeWrapper], {});
-    this.contentWrapper = make("div", [this.CSS.contentWrapper], {});
+    this.element = make("div", [this.CSS.block, this.CSS.codeWrapper]);
+    this.contentWrapper = make("div", [this.CSS.contentWrapper]);
 
-    // TODO:
-    const codeText = this.data.text;
+    const codeText = this.isTabMode ? this.data[0].content : this.data.content;
 
     this.codeContainer = make(
       "code",
-      [this.CSS.baseClass, this.CSS.wrapper, this.CSS.langClass],
+      [this.CSS.wrapper, this.CSS.langClass],
       {
         contentEditable: true
       }
@@ -330,8 +322,10 @@ export default class Code {
     cornerWrapper.appendChild(copyLabel);
 
     // TODO:  depands data structure
-    this.tabberEl = this.tabber.renderTabs(this.langs);
-    this.element.appendChild(this.tabberEl);
+    if (this.isTabMode) {
+      this.tabberEl = this.tabber.renderTabs(this.data);
+      this.element.appendChild(this.tabberEl);
+    }
 
     this.codeContainer.appendChild(codeContent);
     this.contentWrapper.appendChild(this.codeContainer);
@@ -368,7 +362,7 @@ export default class Code {
    * @private
    */
   selectLabelOnChange(label) {
-    const activeTabs = this.langs.filter(item => item.active);
+    const activeTabs = this.data.filter(item => item.active);
     if (activeTabs.length <= 0) return false;
 
     const activeTab = activeTabs[0];
@@ -429,9 +423,7 @@ export default class Code {
    * @returns {CodeData}
    */
   save(codeElement) {
-    return Object.assign(this.data, {
-      text: codeElement.innerText
-    });
+    return this.data;
   }
 
   /**

@@ -82,7 +82,7 @@
 .cdx-code-tabs ul li label .lang img {
   width: 14px;
   height: 14px;
-  filter: saturate(0.8);
+  filter: saturate(0.6);
 }
 
 /* 33px matches ruby */

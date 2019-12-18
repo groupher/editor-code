@@ -13,7 +13,6 @@
   height: 60px;
   min-width: 240px;
   border-bottom: none;
-  margin-top: 20px;
 }
 .cdx-code-tabs input[name="tab-control"] {
   display: none;

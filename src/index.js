@@ -149,7 +149,6 @@ export default class Code {
   prismOnload() {
     // see: https://github.com/PrismJS/prism/issues/832#issuecomment-300175499
     Prism.hooks.add("before-highlight", (env) => {
-      console.log("before highlight: ", env.element.innerText);
       env.code = env.element.innerText;
     });
     this.highlightCodeSyntax();
@@ -179,7 +178,6 @@ export default class Code {
    */
   switchTab(data) {
     const langArrayIndex = this.findIndex(this.data, data.index);
-    this.tabber.moveIndicator(langArrayIndex);
 
     const curClass = this.codeContainer.classList.value;
     const classedWithLang = curClass.slice(0, curClass.indexOf("language-"));
@@ -281,7 +279,6 @@ export default class Code {
     const element = this.codeContainer;
 
     if (element && Prism) {
-      console.log("-> highlightCodeSyntax element: ", element);
       Prism.highlightElement(element);
     }
   }

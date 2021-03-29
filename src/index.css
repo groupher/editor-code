@@ -1,7 +1,3 @@
-.cdx-quote-icon svg {
-  transform: rotate(180deg);
-}
-
 .cdx-code-wrapper {
   position: relative;
 }
@@ -18,6 +14,7 @@
   font-size: 16px !important;
   padding: 15px !important;
   min-height: 52px;
+  margin-top: 20px;
   margin-bottom: 20px;
 }
 
@@ -30,7 +27,6 @@
 .cdx-code__text {
   margin-bottom: 1px;
 }
-
 
 .cdx-code-lang_corner_warpper {
   position: absolute;
@@ -78,7 +74,7 @@
   padding-bottom: 3px;
 }
 
-:not(pre) > code[class*="language-"], pre[class*="language-"] {
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
   background-color: #eff5f9;
-
 }

@@ -1,21 +1,25 @@
-.cdx-code-wrapper {
-  position: relative;
-}
-
-.cdx-code-content-wrapper {
-  position: relative;
-}
-
 .cdx-code {
   margin: 0;
   background: transparent;
   display: block;
   outline: none;
   font-size: 16px !important;
-  padding: 15px !important;
   min-height: 52px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+.cdx-code-wrapper {
+  width: 100%;
+  outline: none;
+  cursor: text;
+}
+
+.cdx-code-content-wrapper {
+  position: relative;
+  position: relative;
+  background: #eff5f9;
+  padding: 20px;
 }
 
 .cdx-code__input {
@@ -34,29 +38,28 @@
   right: 15px;
   display: flex;
   align-items: center;
-}
-
-.cdx-code-lang_label {
-  font-size: 16px;
+  font-size: 14px;
   font-style: italic;
-  color: #627b8c;
-  cursor: pointer;
-}
-
-.cdx-code-lang_label:after {
-  content: "|";
-  font-size: 10px;
-  margin-left: 10px;
-  margin-right: 10px;
-  font-style: normal;
-  opacity: 0.6;
 }
 
 .cdx-code-lang_copy {
   color: #627b8c;
   cursor: pointer;
-
   margin-top: 2px;
+}
+
+.cdx-code-lang_copy::before {
+  content: "|";
+  font-size: 10px;
+  margin-left: 3px;
+  margin-right: 10px;
+  font-style: normal;
+  opacity: 0.6;
+}
+
+.cdx-code-lang_copy svg {
+  width: 14px;
+  height: 14px;
 }
 
 .cdx-code-lang_copy-success {

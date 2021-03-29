@@ -1,20 +1,18 @@
-import { make } from '@groupher/editor-utils'
+import { make } from "@groupher/editor-utils";
 
 import DeleteIcon from "./icon/delete.svg";
-import "./tabber.css";
+import "./style/tabber.css";
 
 const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
 
-const alias = text => {
+const alias = (text) => {
   switch (text) {
-    case "javascript":
-      return "js..";
+    // case "javascript":
+    // return "js";
     case "typescript":
-      return "ts..";
+      return "ts";
     case "csharp":
       return "c#..";
-    case "python":
-      return "py..";
     case "r":
       return "R";
     default:
@@ -64,7 +62,7 @@ export default class Tabber {
       input: this.api.styles.input,
       tabsWrapper: "cdx-code-tabs-wrapper",
       codeTabs: "cdx-code-tabs",
-      deleteBtn: "delete-btn"
+      deleteBtn: "delete-btn",
     };
   }
 
@@ -95,7 +93,7 @@ export default class Tabber {
    */
   buildSlider(count) {
     this.sliderEl = make("div", ["slider", `slider-width-${count}`], {
-      innerHTML: '<div class="indicator" />'
+      innerHTML: '<div class="indicator" />',
     });
 
     return this.sliderEl;
@@ -136,7 +134,7 @@ export default class Tabber {
       const inputEl = make("input", null, {
         type: "radio",
         id: tab_id,
-        name: "tab-control"
+        name: "tab-control",
       });
 
       container.appendChild(inputEl);
@@ -149,17 +147,17 @@ export default class Tabber {
               <div class="title">${alias(element.lang)}</div>
             </div>
           </label>
-        `
+        `,
       });
 
       // first tab should not be deleted
       if (i !== 0) {
         const deleteBtnEl = make("div", [this.CSS.deleteBtn], {
-          innerHTML: DeleteIcon
+          innerHTML: DeleteIcon,
         });
         liEl.appendChild(deleteBtnEl);
 
-        deleteBtnEl.addEventListener("click", ev => {
+        deleteBtnEl.addEventListener("click", (ev) => {
           ev.stopPropagation();
           this.removeTab(element);
         });

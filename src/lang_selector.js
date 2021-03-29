@@ -1,5 +1,7 @@
 import Selectr from "mobius1-selectr";
 
+import "./style/lang_selector.css";
+
 const ICON_ASSETS = "https://cps-oss.oss-cn-shanghai.aliyuncs.com/icons/pl/";
 
 const LANGUAGES = [
@@ -39,7 +41,7 @@ const LANGUAGES = [
   "java",
   "csharp",
   "cpp",
-  "shell"
+  "shell",
 ];
 
 let options = [];
@@ -48,11 +50,11 @@ let options = [];
 export const getLangOptions = () => {
   if (options.length !== 0) return options;
 
-  LANGUAGES.forEach(lang => {
+  LANGUAGES.forEach((lang) => {
     options.push({
       value: lang,
       title: lang,
-      icon: ICON_ASSETS + lang + ".png"
+      icon: ICON_ASSETS + lang + ".png",
     });
   });
 
@@ -69,13 +71,13 @@ export const getLangOptions = () => {
  * @returns {boolean}
  */
 // see https://github.com/Mobius1/Selectr/wiki/Options#renderoption for details
-const renderOption = option => {
+const renderOption = (option) => {
   const template = [
     "<div class='selectr-lang-template'><img src='",
     option.dataset.src,
     "'><span>",
     option.textContent,
-    "</span></div>"
+    "</span></div>",
   ];
 
   return template.join("");
@@ -93,24 +95,24 @@ export const initSelector = (el, activeLabel = "javascript", onChange) => {
   const selector = new Selectr(el, {
     renderOption: renderOption,
     messages: {
-      noResults: "未找到该标签"
-    }
+      noResults: "未找到该标签",
+    },
   });
 
-  selector.on("selectr.init", function() {
+  selector.on("selectr.init", function () {
     this.setValue(activeLabel);
 
     this.input.placeholder = activeLabel;
     this.input.addEventListener("blur", () => this.close());
   });
 
-  selector.on("selectr.open", function() {
+  selector.on("selectr.open", function () {
     this.input.placeholder = activeLabel;
 
     this.input.addEventListener("blur", () => this.close());
   });
 
-  selector.on("selectr.change", function(option) {
+  selector.on("selectr.change", function (option) {
     this.input.placeholder = option.innerText;
     if (onChange) {
       onChange(option.innerText);

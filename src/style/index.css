@@ -40,6 +40,12 @@
   align-items: center;
   font-size: 14px;
   font-style: italic;
+  opacity: 0.6;
+  transition: opacity 0.25s;
+}
+
+.cdx-code-lang_corner_warpper:hover {
+  opacity: 1;
 }
 
 .cdx-code-lang_copy {

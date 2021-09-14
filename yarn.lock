@@ -2731,8 +2731,8 @@ postcss@^6.0.1, postcss@^6.0.23:
     supports-color "^5.4.0"
 
 prismjs@^1.17.1:
-  version "1.24.1"
-  resolved "https://registry.nlark.com/prismjs/download/prismjs-1.24.1.tgz?cache=0&sync_timestamp=1625313362193&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fprismjs%2Fdownload%2Fprismjs-1.24.1.tgz#c4d7895c4d6500289482fa8936d9cdd192684036"
+  version "1.24.0"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.24.0.tgz#0409c30068a6c52c89ef7f1089b3ca4de56be2ac"
 
 process-nextick-args@~2.0.0:
   version "2.0.1"

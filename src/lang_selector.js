@@ -41,7 +41,7 @@ const LANGUAGES = [
   "java",
   "csharp",
   "cpp",
-  "shell",
+  "bash",
 ];
 
 let options = [];
@@ -95,9 +95,10 @@ export const initSelector = (el, activeLabel = "javascript", onChange) => {
   const selector = new Selectr(el, {
     renderOption: renderOption,
     messages: {
-      noResults: "未找到该标签",
+      noResults: "未找到该语言",
     },
   });
+  console.log("# activeLabel -> ", activeLabel);
 
   selector.on("selectr.init", function () {
     this.setValue(activeLabel);

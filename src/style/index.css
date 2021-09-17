@@ -13,13 +13,18 @@
   width: 100%;
   outline: none;
   cursor: text;
+  overflow-x: scroll;
 }
 
 .cdx-code-content-wrapper {
   position: relative;
-  position: relative;
   background: #eff5f9;
-  padding: 20px;
+  padding: 18px;
+}
+
+.cdx-code-content-inner-wrapper {
+  overflow: scroll;
+  max-height: 600px;
 }
 
 .cdx-code__input {
@@ -34,13 +39,17 @@
 
 .cdx-code-lang_corner_warpper {
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 4px;
+  right: 6px;
+  background: #eef5f9;
+  padding-right: 10px;
+  padding-top: 3px;
+  border-radius: 10px;
+
   display: flex;
   align-items: center;
   font-size: 14px;
   font-style: italic;
-  opacity: 0.6;
   transition: opacity 0.25s;
 }
 
@@ -76,9 +85,7 @@
 
 .cdx-custom-setting-wrapper {
   display: flex;
-  justify-content: center;
-  border-bottom: 1px solid;
-  border-bottom-color: #f0f1f5;
+  justify-content: flex-start;
   width: 100%;
   padding-bottom: 3px;
 }

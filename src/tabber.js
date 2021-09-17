@@ -129,6 +129,7 @@ export default class Tabber {
   }
 
   buildLabel(langObj) {
+    console.log("> buildLabel langObj: ", langObj);
     const wrapper = make("li");
 
     const labelClass = langObj.index == this.activeTabIndex ? "active" : "";

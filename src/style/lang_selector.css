@@ -6,7 +6,7 @@
  */
 .selectr-container {
   position: relative;
-  width: 150px !important;
+  width: 125px !important;
 }
 
 .selectr-container li {
@@ -235,7 +235,7 @@
 
 .selectr-input {
   text-align: right;
-  width: 140px;
+  width: 114px;
   outline: none;
   box-sizing: border-box;
   margin: 0;

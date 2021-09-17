@@ -1,6 +1,10 @@
 import copyToClipboard from "copy-to-clipboard";
 import { make, loadJS } from "@groupher/editor-utils";
 
+import Prism from "prismjs";
+// import "prismjs/plugins/autoloader/prism-autoloader";
+// import "prismjs/plugins/line-numbers/prism-line-numbers";
+
 /**
  * Build styles
  */
@@ -15,10 +19,12 @@ import TabIcon from "./icon/tab.svg";
 import LinenoIcon from "./icon/lineno.svg";
 
 const scripts = {
-  prism:
-    "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js",
+  // prism:
+  //   "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/components/prism-core.min.js",
   prismAutoloader:
     "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/autoloader/prism-autoloader.min.js",
+  // lineNumbers:
+  //   "https://cdn.jsdelivr.net/npm/prismjs@1.17.1/plugins/line-numbers/prism-line-numbers.min.js",
 };
 
 /**
@@ -55,10 +61,12 @@ export default class Code {
     this.langSelector = null;
     this.tabberEl = null;
 
-    this.data = data;
+    this.data = this.initDataIfneed(data);
+    this.activeTabIndex = 0;
 
-    loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
+    // loadJS(scripts.prism, this.prismOnload.bind(this), document.body);
     loadJS(scripts.prismAutoloader, null, document.body);
+    // loadJS(scripts.lineNumbers, null, document.body);
 
     this.isTabMode = this.data.length > 1;
 
@@ -68,11 +76,11 @@ export default class Code {
         icon: TabIcon,
         type: "warning",
       },
-      {
-        title: "显示行号",
-        icon: LinenoIcon,
-        type: "error",
-      },
+      // {
+      //   title: "显示行号",
+      //   icon: LinenoIcon,
+      //   type: "error",
+      // },
     ];
 
     this.tabber = new Tabber({
@@ -82,6 +90,20 @@ export default class Code {
       switchTab: this.switchTab.bind(this),
       removeTab: this.removeTab.bind(this),
     });
+  }
+
+  initDataIfneed(data) {
+    if (!Array.isArray(data)) {
+      return [
+        {
+          index: 0,
+          content: " ",
+          lang: "bash",
+        },
+      ];
+    }
+
+    return data;
   }
 
   /**
@@ -126,6 +148,7 @@ export default class Code {
       block: this.api.styles.block,
       codeWrapper: "cdx-code-wrapper",
       contentWrapper: "cdx-code-content-wrapper",
+      contentInnerWrapper: "cdx-code-content-inner-wrapper",
       wrapper: "cdx-code",
       text: "cdx-code__text",
       langClass: `language-${this.data[0].lang}`,
@@ -189,6 +212,16 @@ export default class Code {
     this.codeContainer.innerText = curLang[0].content;
     this.codeContainer.classList = classedWithLang + " language-" + data.lang;
     this.langSelector.setValue(data.lang);
+
+    const tabLabel = this.element.querySelector(
+      `label[data-index="${data.index}"]`
+    );
+    if (tabLabel) tabLabel.click();
+
+    this.activeTabIndex = data.index;
+
+    console.log(">> after switch tab: ", this.data);
+
     this.highlightCodeSyntax();
   }
 
@@ -205,7 +238,14 @@ export default class Code {
 
     if (this.data.length === 1) {
       this.isTabMode = false;
-      this.data = { ...this.data[0] };
+      if (data.index !== 0) {
+        this.data = [this.data[0]];
+        this.switchTab(this.data[0]);
+      } else {
+        this.data = [this.data[1]];
+        this.switchTab(this.data[1]);
+      }
+
       this.element.removeChild(this.tabberEl);
       this.tabberEl = null;
     } else {
@@ -214,14 +254,14 @@ export default class Code {
   }
 
   /**
-   * add a new tab with default shell syntax
+   * add a new tab with default bash syntax
    *
    * @returns {void}
    * @private
    */
   addTab() {
     if (!this.isTabMode) {
-      this.data = [{ ...this.data, index: 0 }];
+      this.data[0].index = 0;
       this.isTabMode = true;
     }
 
@@ -239,12 +279,14 @@ export default class Code {
 
     this.data.push({
       index: maxIndex + 1,
-      lang: "shell",
-      content: "",
+      lang: "bash",
+      content: " ",
     });
+    // console.log("push after: ", this.data);
 
-    this.reBuildTabs();
     this.api.toolbar.close();
+    this.reBuildTabs(false);
+    this.switchTab(this.data[maxIndex + 1]);
   }
 
   /**
@@ -291,8 +333,11 @@ export default class Code {
   render() {
     this.element = make("div", [this.CSS.block, this.CSS.wrapper]);
     this.contentWrapper = make("div", [this.CSS.contentWrapper]);
+    this.contentInnerWrapper = make("div", [this.CSS.contentInnerWrapper]);
 
     const codeText = this.data[0].content;
+    const codeLang = this.data[0].lang;
+    console.log("codeLang: ", codeLang);
 
     this.codeContainer = make(
       "code",
@@ -301,6 +346,12 @@ export default class Code {
         contentEditable: true,
       }
     );
+
+    this.codeContainer.addEventListener("input", (e) => {
+      console.log("this.activeTabIndex -> ", this.activeTabIndex);
+      const activeTabIndex = this.activeTabIndex;
+      this.data[activeTabIndex].content = e.target.innerText;
+    });
 
     const CodeContentEl = make("div", [this.CSS.input, this.CSS.text], {
       innerHTML: codeText,
@@ -323,9 +374,10 @@ export default class Code {
     }
 
     this.codeContainer.appendChild(CodeContentEl);
-    this.contentWrapper.appendChild(this.codeContainer);
-    this.contentWrapper.appendChild(cornerWrapper);
+    this.contentInnerWrapper.appendChild(this.codeContainer);
+    this.contentInnerWrapper.appendChild(cornerWrapper);
 
+    this.contentWrapper.appendChild(this.contentInnerWrapper);
     this.element.appendChild(this.contentWrapper);
 
     this.setupLangsOptions(LangLabelEl);
@@ -343,7 +395,7 @@ export default class Code {
     setTimeout(() => {
       this.langSelector = initSelector(
         LangLabelEl,
-        "javascript",
+        codeLang,
         this.selectLabelOnChange.bind(this)
       );
     }, 100);

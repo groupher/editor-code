@@ -1,5 +1,10 @@
 import copyToClipboard from "copy-to-clipboard";
-import { make, loadJS } from "@groupher/editor-utils";
+import {
+  make,
+  loadJS,
+  enableCtrlEnterBreak,
+  addBreakHint,
+} from "@groupher/editor-utils";
 
 import Prism from "prismjs";
 // import "prismjs/plugins/autoloader/prism-autoloader";
@@ -399,6 +404,9 @@ export default class Code {
         this.selectLabelOnChange.bind(this)
       );
     }, 100);
+
+    enableCtrlEnterBreak(this.element, this.api);
+    addBreakHint(this.element, { right: "12px", bottom: "-15px" });
 
     return this.element;
   }

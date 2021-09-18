@@ -638,10 +638,10 @@
     "lodash" "^4.17.13"
     "to-fast-properties" "^2.0.0"
 
-"@groupher/editor-utils@^0.2.50":
-  "integrity" "sha512-yWXPtiHdByDs9cMqz7G01G2dH0BElgM6dQz5kfgppUkJrFyjL55Xv5YKnR3NMzYwSQofPU8+Bk2ep0JBjp6kkQ=="
-  "resolved" "https://registry.npmjs.org/@groupher/editor-utils/-/editor-utils-0.2.50.tgz"
-  "version" "0.2.50"
+"@groupher/editor-utils@^0.2.54":
+  "integrity" "sha512-vBn38Berc/bLgxObeH9tJXxBG+r5vO0+H1ii3MG2yZ1akYylb+SiT+MI4T+yadGbIpKsyKBHGq7wLiWHHFvMhQ=="
+  "resolved" "https://registry.npmjs.org/@groupher/editor-utils/-/editor-utils-0.2.54.tgz"
+  "version" "0.2.54"
   dependencies:
     "debug" "^4.1.1"
     "pubsub-js" "^1.8.0"

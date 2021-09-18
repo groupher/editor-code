@@ -25,6 +25,7 @@
 .cdx-code-content-inner-wrapper {
   overflow: scroll;
   max-height: 600px;
+  cursor: text;
 }
 
 .cdx-code__input {
@@ -58,6 +59,8 @@
 }
 
 .cdx-code-lang_copy {
+  display: flex;
+  align-items: center;
   color: #627b8c;
   cursor: pointer;
 }

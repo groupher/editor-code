@@ -86,7 +86,7 @@
 
 /* 33px matches ruby */
 .cdx-code-tabs ul li label .title {
-  max-width: 50px;
+  max-width: 75px;
   min-width: 33px;
   white-space: nowrap;
   overflow: hidden;

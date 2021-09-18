@@ -104,13 +104,13 @@ export const initSelector = (el, activeLabel = "javascript", onChange) => {
     this.setValue(activeLabel);
 
     this.input.placeholder = activeLabel;
-    this.input.addEventListener("blur", () => this.close());
+    // this.input.addEventListener("blur", () => this.close());
   });
 
   selector.on("selectr.open", function () {
     this.input.placeholder = activeLabel;
 
-    this.input.addEventListener("blur", () => this.close());
+    // this.input.addEventListener("blur", () => this.close());
   });
 
   selector.on("selectr.change", function (option) {

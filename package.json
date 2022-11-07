@@ -28,7 +28,7 @@
     "style-loader": "^0.21.0",
     "svg-inline-loader": "^0.8.0",
     "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3"
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "@groupher/editor-utils": "^0.2.54",
